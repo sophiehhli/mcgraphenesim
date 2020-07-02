@@ -28,7 +28,7 @@ def point_circle_intersection(point, circle):
 	line_string_coord = point.line_coordinates(circle)
 	print(point.line_coordinates(circle))
 	trajectory = LineString(line_string_coord)
-	multipoint = reconstructed_circle.intersection(trajectory)
+	multipoint = trajectory.intersection(reconstructed_circle)
 	print(multipoint)
 	result = isinstance(multipoint, shapely.geometry.MultiPoint)
 	if result:

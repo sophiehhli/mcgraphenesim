@@ -20,7 +20,7 @@ i = 0
 circle.plot_boundary_eq()
 
 #iterate for multiple collisions with the boundary
-while i < 15: 
+while i < 20: 
 	# calculate intersection between ray and boundary
 	intersection = interaction.Intersection(interaction.point_circle_intersection(curphonon, circle))
 	# add coordinated to the intersections array
@@ -33,3 +33,5 @@ while i < 15:
 	i += 1
 
 plt.show()
+
+print(len(list_intersections))
