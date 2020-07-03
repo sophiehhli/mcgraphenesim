@@ -2,11 +2,11 @@ import numpy as np
 from scipy.stats import cosine 
 
 import boundary
-dx = 0.0000001
-linelength = 1000
+dx = 0.00000000001
+linelength = 100
 
-default_dir = np.array([-np.cos(np.pi/4), -np.sin(np.pi/5)])
-#default_dir = np.array([-1,0])
+default_dir = np.array([-np.cos(np.pi/3), -np.sin(np.pi/5)])
+default_dir = np.array([-1,0])
 
 class Particle(): 
 	"""particle type with attributes of postitiona and direction"""

@@ -46,6 +46,28 @@ def plot_trajectory(inital_point, new_point):
 	y_cords = [inital_point.y0, new_point.y0]
 	plt.plot(x_cords, y_cords,'k-', lw=0.5)
 
-def sample_cos_dist(self):
+def sample_cos_dist():
 		"""sample cosine distribution for diffuse"""
-		return cosine.rvs()
+		usample = np.random.random(1000) 
+		theta = np.rad2deg(np.arcsin(np.sqrt(usample)))
+		mult = np.random.choice([-1,1],1000)
+		theta = np.multiply(theta,mult)
+		return theta
+
+def diffuse_reflection(point, boundary, intersection): 
+	n = intersection.norm_tan(boundary)[0]
+	ndir = np.zeros(2)
+	usample = np.random.random() 
+	mult = np.random.choice([-1,1])
+	theta = np.arcsin(np.sqrt(usample))*mult
+	ndir[0] = np.cos(theta) * n[0] - np.sin(theta) * n[1]
+	ndir[1] = np.sin(theta) * n[0] + np.cos(theta) * n[1]
+	newparticle = Particle(intersection.x, intersection.y, ndir) 
+	return newparticle
+
+def scatter(f, point, boundary, intersection):
+	if np.random.random()< f: 
+		return diffuse_reflection(point, boundary, intersection)
+	else:
+		return specular_reflection(point, boundary, intersection)
+
