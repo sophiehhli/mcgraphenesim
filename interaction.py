@@ -26,18 +26,9 @@ def point_circle_intersection(point, circle):
 	"""use shapely library to calcualte tajectory/boundary intersections"""
 	reconstructed_circle = circle.reconstructed_circle
 	line_string_coord = point.line_coordinates(circle)
-	print(point.line_coordinates(circle))
 	trajectory = LineString(line_string_coord)
 	multipoint = trajectory.intersection(reconstructed_circle)
-	print(multipoint)
-	result = isinstance(multipoint, shapely.geometry.MultiPoint)
-	if result:
-		multiarray = [[p.x, p.y] for p in multipoint]
-		if [point.x0, point.y0] in multiarray: 
-			multiarray.remove([point.x0, point.y0])
-	else: 
-		multiarray = [[multipoint.x, multipoint.y]]
-	return multiarray[0]
+	return [multipoint.x, multipoint.y]
 
 def specular_reflection(point, boundary, intersection):
 	"""collision with boundary, specular
@@ -53,7 +44,7 @@ def plot_trajectory(inital_point, new_point):
 	"""add line connecting interaction points with line"""
 	x_cords = [inital_point.x0, new_point.x0]
 	y_cords = [inital_point.y0, new_point.y0]
-	plt.plot(x_cords, y_cords,'k-', lw=1)
+	plt.plot(x_cords, y_cords,'k-', lw=0.5)
 
 def sample_cos_dist(self):
 		"""sample cosine distribution for diffuse"""

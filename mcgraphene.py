@@ -7,7 +7,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 # create instance of circular boundary and initial phonon
-circle = boundary.Boundary(0,0,1,1,3)
+circle = boundary.Boundary(0,0,1,1,5)
 phonon = point.Particle()
 
 list_intersections = []
@@ -20,10 +20,11 @@ i = 0
 circle.plot_boundary_eq()
 
 #iterate for multiple collisions with the boundary
-while i < 20: 
+while i < 35: 
 	# calculate intersection between ray and boundary
 	intersection = interaction.Intersection(interaction.point_circle_intersection(curphonon, circle))
 	# add coordinated to the intersections array
+	#print(intersection.coordinates)
 	list_intersections.append(intersection.coordinates)
 	# create new phonon travelling in new direction
 	newphonon= interaction.specular_reflection(curphonon, circle, intersection)
@@ -33,5 +34,3 @@ while i < 20:
 	i += 1
 
 plt.show()
-
-print(len(list_intersections))
