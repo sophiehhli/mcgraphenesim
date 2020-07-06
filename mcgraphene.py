@@ -5,11 +5,14 @@ import interaction
 
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 
-f = 0.8
+f = 0.2
 # create instance of circular boundary and initial phonon
 circle = boundary.Boundary(0,0,1,1,5)
-phonon = point.Particle()
+intitaltheta = interaction.sample_cos_dis()
+intialdir = np.array([-np.cos(intitaltheta), -np.sin(intitaltheta)])
+phonon = point.Particle(direction = intialdir)
 
 list_intersections = []
 
@@ -35,6 +38,7 @@ while i < 1000:
 	i += 1
 plt.show()
 
-#data = interaction.sample_cos_dist()
-#plt.hist(data, 100)
-#plt.show()
+polarthetas = [np.arctan(c[1]/c[0]) for c in list_intersections]
+plt.hist(polarthetas,100)
+#plt.hist(interaction.theta_data, 100)
+plt.show()
