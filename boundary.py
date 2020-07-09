@@ -1,6 +1,8 @@
 from shapely.geometry import Point
 from shapely.geometry import LineString
 
+import grad
+
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -25,10 +27,7 @@ class Boundary():
 
 	def grad_boundary_eq_circle(self, x, y): 
 		"""gradient of the dedined cicle at point (x,y)"""
-		v = np.zeros(2)
-		v[0] = 2*(x-self.x0)*(1/self.width**2)
-		v[1] = 2*(y-self.y0)*(1/self.height**2)
-		return v/np.linalg.norm(v)
+		return grad.grad_circle(x, y, self.x0, self.y0, self.width, self.height)
 
 	def plot_boundary_eq(self): 
 		"""plot the implicit equation with matplotlib"""
@@ -43,3 +42,6 @@ class Boundary():
 		plt.xlim(-self.radius - .25, self.radius + .25)
 		plt.ylim(-self.radius - .25, self.radius + .25)
 		plt.grid(linestyle='--')
+
+
+

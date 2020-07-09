@@ -8,6 +8,7 @@ import numpy as np
 
 from point import Particle
 from boundary import Boundary
+import contact
 
 class Intersection():
 	"""type with jsut corrdinates and can calculate normal and tangent"""
@@ -38,18 +39,10 @@ def point_circle_intersection(point, circle):
 			multiarray.remove([point.x0, point.y0])
 		multiarray = multiarray[0]
 		return multiarray
-
-	if isinstance(multipoint, shapely.geometry.Point) == True: 
+	elif isinstance(multipoint, shapely.geometry.Point) == True: 
 		return [multipoint.x, multipoint.y]
-	
-	if isinstance(multipoint, shapely.geometry.LineString) == True:
+	else:
 		print("Could not find the intersection")
-		print("Position:")
-		print(point.pos)
-		print("Direction:")
-		print(point.direction)
-
-
 	return [multipoint.x, multipoint.y]
 
 def specular_reflection(point, boundary, intersection):
@@ -73,9 +66,8 @@ def sample_cos_dis():
 		theta = np.arcsin(np.sqrt(usample)) * neg
 	return theta 
 
-def diffuse_reflection(point, boundary, intersection): 
+def diffuse_reflection(n, intersection): 
 	theta = sample_cos_dis()
-	n = intersection.normal(boundary)
 	newdir = np.zeros(2)
 	theta_data.append(theta)
 	newdir[0] = np.cos(theta) * n[0] - np.sin(theta) * n[1]
@@ -85,9 +77,11 @@ def diffuse_reflection(point, boundary, intersection):
 
 def scatter(f, point, boundary, intersection):
 	if np.random.random() < f: 
-		return diffuse_reflection(point, boundary, intersection)
+		normal =  intersection.normal(boundary)
+		return diffuse_reflection(normal, intersection)
 	else:
 		return specular_reflection(point, boundary, intersection)
+
 
 def plot_trajectory(inital_point, new_point):
 	"""add line connecting interaction points with line"""
@@ -98,10 +92,24 @@ def plot_trajectory(inital_point, new_point):
 def sample_cos_large_dist():
 	"""sample cosine distribution for diffuse"""
 	usample = np.random.random(1000) 
-	theta = np.rad2deg(np.arcsin(np.sqrt(usample)))
+	theta = np.rad2deg(np.arcsin((usample)))
 	mult = np.random.choice([-1,1], 1000)
 	theta = np.multiply(theta, mult)
 	return theta
 
+def gen_line_point(start, end):
+	a = [max(start[0], end[0]), max(start[1], end[1])]
+	b = [min(start[0], end[0]), min(start[1], end[1])]
+	x = (a[0] - b[0]) * np.random.random_sample() + b[0]
+	if (start[0]- end[0]) == 0:
+		y = (a[1] - b[1]) * np.random.random_sample() + b[1]
+	else:
+		gradient = (start[1] - end[1])/(start[0]- end[0])
+		y = x * gradient
+	return Intersection([x,y])
 
-
+def contact_emmision(lead):
+	random_point = gen_line_point(lead.start, lead.end)
+	print('random point = ' + str([random_point.x, random_point.y]))
+	normal = lead.normal
+	return diffuse_reflection(normal, random_point)
