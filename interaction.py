@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 import numpy as np 
 
-from point import Particle
-from boundary import Boundary
+import point 
+import boundary
 import contact
 
 class Intersection():
@@ -18,7 +18,7 @@ class Intersection():
 		self.y = self.coordinates[1]
 
 	def normal(self, boundary):
-		normal = - boundary.grad_boundary_eq_circle(self.x, self.y)
+		normal = - boundary.grad(self.x, self.y)
 		return normal
 
 	def tangent(self,boundary): 
@@ -26,12 +26,11 @@ class Intersection():
 		tangent = np.array([- normal[1], normal[0]])
 		return tangent
 
-def point_circle_intersection(point, circle): 
+def point_intersection(point, boundary): 
 	"""use shapely library to calcualte tajectory/boundary intersections"""
-	reconstructed_circle = circle.reconstructed_circle
-	line_string_coord = point.line_coordinates(circle)
+	line_string_coord = point.line_coordinates()
 	trajectory = LineString(line_string_coord)
-	multipoint = trajectory.intersection(reconstructed_circle)
+	multipoint = trajectory.intersection(boundary.reconstructed)
 	
 	if isinstance(multipoint, shapely.geometry.MultiPoint)== True: 
 		multiarray = [[p.x, p.y] for p in multipoint]
@@ -45,13 +44,13 @@ def point_circle_intersection(point, circle):
 		print("Could not find the intersection")
 	return [multipoint.x, multipoint.y]
 
-def specular_reflection(point, boundary, intersection):
+def specular_reflection(particle, boundary, intersection):
 	"""collision with boundary, specular
 	returns Particle type with new direction, position at intersection"""
-	odir = point.direction
+	odir = particle.direction
 	n = intersection.normal(boundary)
 	newdir = np.array(odir - 2 * (np.dot(odir,n)) * n)
-	newparticle = Particle(intersection.x, intersection.y, newdir) 
+	newparticle = point.Particle(intersection.x, intersection.y, newdir) 
 	return newparticle
 
 theta_data = []
@@ -72,7 +71,7 @@ def diffuse_reflection(n, intersection):
 	theta_data.append(theta)
 	newdir[0] = np.cos(theta) * n[0] - np.sin(theta) * n[1]
 	newdir[1] = np.sin(theta) * n[0] + np.cos(theta) * n[1]
-	newparticle = Particle(intersection.x, intersection.y, newdir) 
+	newparticle = point.Particle(intersection.x, intersection.y, newdir) 
 	return newparticle
 
 def scatter(f, point, boundary, intersection):
@@ -98,10 +97,11 @@ def sample_cos_large_dist():
 	return theta
 
 def gen_line_point(start, end):
+	'''generates a random point on a line'''
 	a = [max(start[0], end[0]), max(start[1], end[1])]
 	b = [min(start[0], end[0]), min(start[1], end[1])]
 	x = (a[0] - b[0]) * np.random.random_sample() + b[0]
-	if (start[0]- end[0]) == 0:
+	if (start[0] - end[0]) == 0:
 		y = (a[1] - b[1]) * np.random.random_sample() + b[1]
 	else:
 		gradient = (start[1] - end[1])/(start[0]- end[0])
@@ -109,7 +109,6 @@ def gen_line_point(start, end):
 	return Intersection([x,y])
 
 def contact_emmision(lead):
+	'''diffusive emission from a random point in the contact'''
 	random_point = gen_line_point(lead.start, lead.end)
-	print('random point = ' + str([random_point.x, random_point.y]))
-	normal = lead.normal
-	return diffuse_reflection(normal, random_point)
+	return diffuse_reflection(lead.normal, random_point)

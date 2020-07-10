@@ -22,33 +22,34 @@ def sep_xy(start, end):
 	return [x, y]
 
 class Lead():
-	def __init__(self, start, end): 
-		self.start = start 
-		self.end = end
+	def __init__(self, coordinates): 
+		self.coordinates = coordinates
+		self.start = coordinates[0]
+		self.end = coordinates [1]
 		self.line = LineString([tuple(self.start), tuple(self.end)])
-		self.normal = grad.grad_line(self.start, self.end)
+		self.normal = -grad.grad_line(self.start, self.end)
 
 	def check_intersection(self, particle, circle):
-		line_string_coord = particle.line_coordinates(circle)
+		line_string_coord = particle.line_coordinates()
 		trajectory = LineString(line_string_coord)
 		intersection = self.line.intersection(trajectory)
 		result = isinstance(intersection, shapely.geometry.Point)
 		return result
 
 class Source(Lead):
-	def __init__(self, start, end):
-		super().__init__(start, end)
+	def __init__(self, coordinates):
+		super().__init__(coordinates)
 
 	def plot(self):
 		xandy = sep_xy(self.start, self.end)
-		plt.plot(xandy[0], xandy[1], 'k-', lw=0.5, color='blue')
+		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='blue')
 
 
 class Drain(Lead): 
-	def __init__(self, start, end): 
-		super().__init__(start, end)
+	def __init__(self, coordinates): 
+		super().__init__(coordinates)
 
 	def plot(self): 
 		xandy = sep_xy(self.start, self.end)
-		plt.plot(xandy[0], xandy[1], 'k-', lw=0.5, color='red')
+		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='red')
 	
