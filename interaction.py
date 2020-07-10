@@ -42,6 +42,8 @@ def point_intersection(point, boundary):
 		return [multipoint.x, multipoint.y]
 	else:
 		print("Could not find the intersection")
+		print('Coordinate: ' + str([point.x0, point.y0]))
+		print('direction: ' + str(point.direction))
 	return [multipoint.x, multipoint.y]
 
 def specular_reflection(particle, boundary, intersection):
@@ -59,10 +61,10 @@ def sample_cos_dis():
 	usample = np.random.random() 
 	neg = np.random.choice([-1, 1])
 	theta = np.arcsin(np.sqrt(usample)) * neg
-	while np.rad2deg(theta) > 87 or np.rad2deg(theta) < -87: 
-		usample = np.random.random() 
-		neg = np.random.choice([-1, 1])
-		theta = np.arcsin(np.sqrt(usample)) * neg
+	#while np.rad2deg(theta) > 85 or np.rad2deg(theta) < -85: 
+		#usample = np.random.random() 
+		#neg = np.random.choice([-1, 1])
+		#theta = np.arcsin(np.sqrt(usample)) * neg
 	return theta 
 
 def diffuse_reflection(n, intersection): 

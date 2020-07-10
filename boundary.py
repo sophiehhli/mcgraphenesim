@@ -101,7 +101,7 @@ class Rectangle():
 
 	def plot_collisions(self, list_intersections): 
 		x_vals = [c[0] for c in list_intersections]
-		plt.hist(x_vals, 50)
+		plt.hist(x_vals, bins='auto')
 		plt.title("Linear ditribution of interactions", fontsize=8)
 		plt.xlabel('x')
 		plt.ylabel('Interaction frequency')
