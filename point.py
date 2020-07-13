@@ -3,7 +3,7 @@ from scipy.stats import cosine
 import matplotlib.pyplot as plt
 import boundary
 dx = 0.000000000001
-linelength = 30
+linelength = 200
 
 default_dir = np.array([-np.cos(np.pi/3), -np.sin(np.pi/5)])
 #default_dir = np.array([-1,0])
@@ -13,6 +13,7 @@ class Particle():
 	def __init__(self, x0 = 5, y0 = 0, direction = default_dir):
 		self.x0 = x0
 		self.y0 = y0
+		self.coordinates = [self.x0, self.y0]
 		self.direction = direction
 		self.pos = np.array([self.x0, self.y0])
 
