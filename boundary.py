@@ -70,10 +70,10 @@ class Rectangle():
 		self.length = length 
 		self.width = width 
 
-		self.upperleft = [-self.length/2, self.width/2]
-		self.upperright = [self.length/2, self.width/2]
-		self.lowerright = [self.length/2, -self.width/2]
-		self.lowerleft = [-self.length/2, -self.width/2]
+		self.upperleft = [0, self.width]
+		self.upperright = [self.length, self.width]
+		self.lowerright = [self.length, 0]
+		self.lowerleft = [0, 0]
 		self.coordinates = [self.upperleft, self.upperright, self.lowerright, self.lowerleft]
 
 		self.reconstructed = LinearRing(self.coordinates)
@@ -81,8 +81,10 @@ class Rectangle():
 	def grad(self, x, y): 
 		if y > 0: 
 			return np.array([0, 1])
+			print('bad grad used')
 		else: 
 			return np.array([0, -1])
+			print('bad grad used')
 
 	def lead_coordinates(self, kind):
 		if kind == 's':
@@ -97,27 +99,23 @@ class Rectangle():
 		ax.set_axisbelow(True)
 		ax.add_patch(matplotlib.patches.Rectangle(self.lowerleft, self.length, self.width, fill=False, ec = 'purple'))
 		plt.title('Rectagular Boundary', fontsize=8)
-		plt.xlim(-self.length/2 - 1, self.length/2 + 1)
-		plt.ylim(-self.width/2 - 1, self.width/2 + 1)
+		plt.xlim(-5, self.length + 5)
+		plt.ylim(-5, self.width + 5)
 		plt.grid(linestyle='--')
 
-	def plot_collisions(self, list_intersections, nheater, binwidth): 
+	def temperature_hist(self, list_intersections, nheater, binwidth): 
 		#x_vals = [c[0] for c in list_intersections]
 		data = []
-		left_edge = -self.length/2 
-		right_edge = self.length/2
+		left_edge = 0
+		right_edge = self.length
 
 		for c in list_intersections: 
 			if c[0] not in [left_edge, right_edge]: 
 				data.append(c[0])
 
 		nds, bins = np.histogram(data,  bins=np.arange(left_edge, right_edge+ binwidth, binwidth))
-		Tnorm = (nds/binwidth)/(nheater/binwidth)
-		nds[-1] = nds[-1]+nheater
-		centers = bins[:-1] + binwidth/2 + right_edge
-		plt.scatter(centers, Tnorm, s=1, marker='o')
-		plt.title("Linear ditribution of interactions", fontsize=8)
-		plt.xlabel('x (mm)')
-		plt.ylabel('T')
-		plt.show()
+		#nds = np.append(nds, [nheater/5])
+		Tnorm = (nds/(binwidth*2))/(nheater/self.width)
+		centers = bins[:-1] 
+		return [centers, Tnorm]
 		

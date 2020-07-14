@@ -79,8 +79,10 @@ def diffuse_reflection(n, intersection):
 def scatter(f, point, boundary, intersection):
 	if np.random.random() < f: 
 		normal =  intersection.normal(boundary)
+		#print('diffuse collision')
 		return diffuse_reflection(normal, intersection)
 	else:
+		#print('specular collision')
 		return specular_reflection(point, boundary, intersection)
 
 

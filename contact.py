@@ -52,4 +52,11 @@ class Drain(Lead):
 	def plot(self): 
 		xandy = sep_xy(self.start, self.end)
 		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='red')
-	
+
+class Thermometer(Lead): 
+	def __init__(self, coordinates):
+		super().__init__(coordinates)
+
+	def plot(self):
+		xandy = sep_xy(self.start, self.end)
+		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='green')
