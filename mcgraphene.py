@@ -59,7 +59,7 @@ for f in range(len(f_list)):
 		i += 1
 	list_intersections.append(fintersections)
 	print('Transmitted: '+ str(plotfunc.transmitted_precent(drain_coll, source_coll)))
-	plotfunc.save_interactions(list_intersections[f], bound)
+	#plotfunc.save_interactions(list_intersections[f], bound)
 plt.show()
 
 binwidth = 0.5 
