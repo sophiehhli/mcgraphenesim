@@ -4,6 +4,7 @@ import shapely
 
 import point
 import grad
+import interaction
 
 import numpy as np
 import matplotlib
@@ -28,14 +29,21 @@ class Lead():
 		self.end = coordinates [1]
 		self.line = LineString([tuple(self.start), tuple(self.end)])
 		self.normal = -grad.grad_line(self.start, self.end)
+		self.n_collisions = 0
 
-	def check_intersection(self, particle, circle):
+	def check_intersection(self, particle):
 		line_string_coord = particle.line_coordinates()
 		trajectory = LineString(line_string_coord)
 		intersection = self.line.intersection(trajectory)
-		result = isinstance(intersection, shapely.geometry.Point)
-		return result
+		check = isinstance(intersection, shapely.geometry.Point)
+		return check 
 
+	def get_intersection(self, particle):
+		line_string_coord = particle.line_coordinates()
+		trajectory = LineString(line_string_coord)
+		intersection = self.line.intersection(trajectory)
+		return intersection
+	
 class Source(Lead):
 	def __init__(self, coordinates):
 		super().__init__(coordinates)
@@ -44,6 +52,10 @@ class Source(Lead):
 		xandy = sep_xy(self.start, self.end)
 		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='blue')
 
+	def response(self, particle): 
+		self.n_collisions += 1 
+		intersection = self.get_intersection(particle)
+		return point.Particle(intersection.x, intersection.y)
 
 class Drain(Lead): 
 	def __init__(self, coordinates): 
@@ -53,10 +65,28 @@ class Drain(Lead):
 		xandy = sep_xy(self.start, self.end)
 		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='red')
 
+	def response(self, particle): 
+		self.n_collisions += 1
+		intersection = self.get_intersection(particle)
+		return point.Particle(intersection.x, intersection.y)
+
 class Thermometer(Lead): 
-	def __init__(self, coordinates):
+	def __init__(self, coordinates, emissivity = 0.3):
 		super().__init__(coordinates)
+		self.emissivity = emissivity
 
 	def plot(self):
 		xandy = sep_xy(self.start, self.end)
 		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='green')
+
+	def response(self, particle): 
+		self.n_collisions += 1 
+		if self.emissivity >= np.random.random():
+			intersection = self.get_intersection(particle)
+			middle_particle = point.Particle(intersection.x, intersection.y)
+			#interaction.plot_trajectory(particle, middle_particle)
+			newphoton = interaction.contact_emmision(self)
+			return newphoton
+		else: 
+			intersection = self.get_intersection(particle)
+			return interaction.c_specular_reflection(particle, self.normal, intersection)

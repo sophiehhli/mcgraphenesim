@@ -35,7 +35,7 @@ def plot_multi_tnorm(histograms, fs, n):
 	plt.title("Normalized temperature profile, $N_{phonons}$ = "+str(n), fontsize=8)
 	plt.xlabel('x (mm)')
 	plt.ylabel('$T^4_{norm}(x)$')
-	plt.legend(handles = plots, loc='upper right', bbox_to_anchor=(0., 1.02, 1., .102))
+	plt.legend(handles = plots, loc='upper right')#, bbox_to_anchor=(0., 1.02, 1., .102))
 	ax.tick_params(direction="in", right=True)
 	#plt.show()
 

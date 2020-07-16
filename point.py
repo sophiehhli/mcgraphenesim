@@ -2,7 +2,7 @@ import numpy as np
 from scipy.stats import cosine 
 import matplotlib.pyplot as plt
 import boundary
-dx = 0.000000000001
+dx = 0.0000000000001
 linelength = 200
 
 default_dir = np.array([-np.cos(np.pi/3), -np.sin(np.pi/5)])
@@ -23,7 +23,9 @@ class Particle():
 		expanded_dir = linelength * self.direction
 		end_coord = self.pos + expanded_dir
 		line = [(start_coord[0], start_coord[1]), (end_coord[0], end_coord[1])]
-		#x_cords = [start_coord[0], end_coord[0]]
+		return line
+
+
+#x_cords = [start_coord[0], end_coord[0]]
 		#y_cords = [start_coord[1], end_coord[1]]
 		#plt.plot(x_cords, y_cords, 'k-', lw=0.5)
-		return line

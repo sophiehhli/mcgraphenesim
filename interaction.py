@@ -8,7 +8,6 @@ import numpy as np
 
 import point 
 import boundary
-import contact
 
 class Intersection():
 	"""type with jsut corrdinates and can calculate normal and tangent"""
@@ -36,8 +35,7 @@ def point_intersection(point, boundary):
 		multiarray = [[p.x, p.y] for p in multipoint]
 		if [point.x0, point.y0] in multiarray: 
 			multiarray.remove([point.x0, point.y0])
-		multiarray = multiarray[0]
-		return multiarray
+		return multiarray[0]
 	elif isinstance(multipoint, shapely.geometry.Point) == True: 
 		return [multipoint.x, multipoint.y]
 	else:
@@ -55,16 +53,25 @@ def specular_reflection(particle, boundary, intersection):
 	newparticle = point.Particle(intersection.x, intersection.y, newdir) 
 	return newparticle
 
+def c_specular_reflection(particle, n, intersection):
+	odir = particle.direction
+	newdir = np.array(odir - 2 * (np.dot(odir,n)) * n)
+	newparticle = point.Particle(intersection.x, intersection.y, newdir) 
+	return newparticle 
+
 theta_data = []
 
 def sample_cos_dis(): 
 	usample = np.random.random() 
 	neg = np.random.choice([-1, 1])
 	theta = np.arcsin(np.sqrt(usample)) * neg
-	while np.rad2deg(theta) > 95 or np.rad2deg(theta) < - 95: 
+	#print(np.rad2deg(theta))
+	while np.rad2deg(theta) > 84 or np.rad2deg(theta) < -84: 
 		usample = np.random.random() 
 		neg = np.random.choice([-1, 1])
 		theta = np.arcsin(np.sqrt(usample)) * neg
+		#print('correction')
+		#print(np.rad2deg(theta))
 	return theta 
 
 def diffuse_reflection(n, intersection): 
@@ -76,14 +83,13 @@ def diffuse_reflection(n, intersection):
 	newparticle = point.Particle(intersection.x, intersection.y, newdir) 
 	return newparticle
 
-def scatter(f, point, boundary, intersection):
+def boundary_response(f, particle, boundary):
+	intersection = Intersection(point_intersection(particle, boundary))
 	if np.random.random() < f: 
 		normal =  intersection.normal(boundary)
-		#print('diffuse collision')
 		return diffuse_reflection(normal, intersection)
 	else:
-		#print('specular collision')
-		return specular_reflection(point, boundary, intersection)
+		return specular_reflection(particle, boundary, intersection)
 
 
 def plot_trajectory(inital_point, new_point):

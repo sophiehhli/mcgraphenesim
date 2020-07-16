@@ -33,8 +33,10 @@ class Circle():
 	def lead_coordinates(self, kind, angle=6):
 		if kind == 's': 
 			center = 0
-		if kind == 'd': 
+		elif kind == 'd': 
 			center = 180
+		elif kind == 't1': 
+			center = 90
 		a1 = np.deg2rad(center + angle/2)
 		a2 = np.deg2rad(center - angle/2)
 		point_max = self.radius * np.array([np.cos(a1), np.sin(a1)])
@@ -63,6 +65,21 @@ class Circle():
 		plt.ylabel('Interaction frequency')
 		plt.show()
 
+	def temperature_hist(self, list_intersections, nheater, binwidth, drain_coords, heater_coords): 
+		polarthetas = [np.arctan(c[1]/c[0]) for c in list_intersections]
+		heater_angles = [np.arctan(c[1]/c[0]) for c in heater_coords]
+		drain_angles = [np.arctan(c[1]/c[0]) for c in drain_coords]
+		for c in polarthetas: 
+			if min(heater_angles)<= c <= max(heater_angles): 
+				polarthetas.remove(c)
+			elif min(drain_angles)<= c <= max(drain_angles): 
+				polarthetas.remove(c)
+		nds, bins = np.histogram(polarthetas,  bins=100)
+		Tnorm = (nds/(binwidth))/(nheater/(max(heater_angles)-min(heater_angles)))
+		centers = bins[:-1] + binwidth/2
+		return [centers, Tnorm]
+
+#np.arange(0, 2*np.pi + binwidth, binwidth
 class Rectangle(): 
 	"""attributes of a 2D graphene rectangle""" 
 	def __init__(self, length = 20, width = 2):
@@ -78,19 +95,22 @@ class Rectangle():
 
 		self.reconstructed = LinearRing(self.coordinates)
 
-	def grad(self, x, y): 
-		if y > 0: 
+	def grad(self, x, y):
+		if y > (self.lowerleft[1]+ self.width/2): 
 			return np.array([0, 1])
-			print('bad grad used')
 		else: 
 			return np.array([0, -1])
-			print('bad grad used')
+			
 
 	def lead_coordinates(self, kind):
-		if kind == 's':
-			return [self.upperright, self.lowerright]
-		if kind == 'd': 
+		if kind == 'd':
+			return [self.lowerright, self.upperright]
+		elif kind == 's': 
 			return [self.upperleft, self.lowerleft]
+		elif kind == 't1': 
+			return [[136, 0], [131, 0]]
+		elif kind == 't2': 
+			return [[17, 0], [12, 0]]
 
 	def plot(self): 
 		"""plots the rectangle in matplotlib""" 
@@ -103,8 +123,7 @@ class Rectangle():
 		plt.ylim(-5, self.width + 5)
 		plt.grid(linestyle='--')
 
-	def temperature_hist(self, list_intersections, nheater, binwidth): 
-		#x_vals = [c[0] for c in list_intersections]
+	def temperature_hist(self, list_intersections, nheater, binwidth, drain, source): 
 		data = []
 		left_edge = 0
 		right_edge = self.length
@@ -113,9 +132,8 @@ class Rectangle():
 			if c[0] not in [left_edge, right_edge]: 
 				data.append(c[0])
 
-		nds, bins = np.histogram(data,  bins=np.arange(left_edge, right_edge+ binwidth, binwidth))
-		#nds = np.append(nds, [nheater/5])
+		nds, bins = np.histogram(data, bins=np.arange(left_edge, right_edge+ binwidth, binwidth))
 		Tnorm = (nds/(binwidth*2))/(nheater/self.width)
-		centers = bins[:-1] 
+		centers = bins[:-1] + binwidth/2
 		return [centers, Tnorm]
 		

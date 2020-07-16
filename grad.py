@@ -9,6 +9,10 @@ def grad_circle(x, y, x0, y0, width, height):
 
 def grad_line(start, end):
 	v = np.zeros(2)
-	v[0] = np.abs(end[1] - start[1])
-	v[1] = -np.abs((end[0] - start[0]))
+	v[0] = end[1] - start[1]
+	v[1] = end[0] - start[0]
 	return v/np.linalg.norm(v)
+
+#inward pointing is to the right of travel 
+#drain: top to bottom 
+#source: bottom to top 
