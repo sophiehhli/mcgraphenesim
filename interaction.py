@@ -64,14 +64,14 @@ theta_data = []
 def sample_cos_dis(): 
 	usample = np.random.random() 
 	neg = np.random.choice([-1, 1])
-	theta = np.arcsin(np.sqrt(usample)) * neg
+	theta = np.arcsin(usample) * neg
 	#print(np.rad2deg(theta))
-	while np.rad2deg(theta) > 84 or np.rad2deg(theta) < -84: 
+	'''while np.rad2deg(theta) > 84 or np.rad2deg(theta) < -84: 
 		usample = np.random.random() 
 		neg = np.random.choice([-1, 1])
 		theta = np.arcsin(np.sqrt(usample)) * neg
 		#print('correction')
-		#print(np.rad2deg(theta))
+		#print(np.rad2deg(theta))'''
 	return theta 
 
 def diffuse_reflection(n, intersection): 
@@ -98,13 +98,14 @@ def plot_trajectory(inital_point, new_point):
 	y_cords = [inital_point.y0, new_point.y0]
 	plt.plot(x_cords, y_cords, 'k-', lw=0.5)
 
-def sample_cos_large_dist():
+def sample_cos_large_dist(n):
 	"""sample cosine distribution for diffuse"""
-	usample = np.random.random(1000) 
-	theta = np.rad2deg(np.arcsin((usample)))
-	mult = np.random.choice([-1,1], 1000)
-	theta = np.multiply(theta, mult)
-	return theta
+	theta_array = []
+	i = 0
+	while i <= n: 
+		theta_array.append(sample_cos_dis())
+		i += 1
+	return theta_array
 
 def gen_line_point(start, end):
 	'''generates a random point on a line'''
@@ -115,7 +116,7 @@ def gen_line_point(start, end):
 		y = (a[1] - b[1]) * np.random.random_sample() + b[1]
 	else:
 		gradient = (start[1] - end[1])/(start[0]- end[0])
-		y = x * gradient
+		y = x * gradient + b[1]
 	return Intersection([x,y])
 
 def contact_emmision(lead):

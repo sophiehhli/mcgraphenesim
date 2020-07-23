@@ -3,7 +3,7 @@ from scipy.stats import cosine
 import matplotlib.pyplot as plt
 import boundary
 dx = 0.0000000000001
-linelength = 200
+linelength = 2000
 
 default_dir = np.array([-np.cos(np.pi/3), -np.sin(np.pi/5)])
 #default_dir = np.array([-1,0])

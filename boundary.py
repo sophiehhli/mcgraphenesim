@@ -30,23 +30,34 @@ class Circle():
 		"""gradient of the dedined cicle at point (x,y)"""
 		return grad.grad_circle(x, y, self.x0, self.y0, self.width, self.height)
 
-	def lead_coordinates(self, kind, angle=6):
+	def lead_coordinates(self, kind, angle=1/30*np.pi):
 		if kind == 's': 
 			center = 0
 		elif kind == 'd': 
-			center = 180
+			center = np.pi
 		elif kind == 't1': 
-			center = 90
-		a1 = np.deg2rad(center + angle/2)
-		a2 = np.deg2rad(center - angle/2)
-		point_max = self.radius * np.array([np.cos(a1), np.sin(a1)])
-		point_min = self.radius * np.array([np.cos(a2), np.sin(a2)])
-		return (point_max, point_min)
+			center = np.pi*1/2
+		elif kind == 't2':
+			center = np.pi*3/2 
+		a1 = (center + angle/2)
+		a2 = (center - angle/2)
+		s = 0.05
+		point_max = (self.radius-s) * np.array([np.cos(a1), np.sin(a1)])
+		point_min = (self.radius-s) * np.array([np.cos(a2), np.sin(a2)])
+		if kind == 's': 
+			return (point_min, point_max)
+		elif kind == 'd': 
+			return (point_min, point_max)
+		elif kind == 't1': 
+			return (point_max, point_min)
+		elif kind == 't2':
+			return (point_max, point_min)
+		
 
 	def plot(self): 
 		"""plot the implicit equation with matplotlib"""
-		xspace = np.linspace(-self.radius, self.radius, 100)
-		yspace = np.linspace(-self.radius, self.radius, 100)
+		xspace = np.linspace(-self.radius, self.radius, 1000)
+		yspace = np.linspace(-self.radius, self.radius, 1000)
 		X,Y = np.meshgrid(xspace,yspace)
 		F = self.equation(X,Y)
 		fig, ax = plt.subplots()
@@ -66,17 +77,17 @@ class Circle():
 		plt.show()
 
 	def temperature_hist(self, list_intersections, nheater, binwidth, drain_coords, heater_coords): 
-		polarthetas = [np.arctan(c[1]/c[0]) for c in list_intersections]
-		heater_angles = [np.arctan(c[1]/c[0]) for c in heater_coords]
-		drain_angles = [np.arctan(c[1]/c[0]) for c in drain_coords]
-		for c in polarthetas: 
-			if min(heater_angles)<= c <= max(heater_angles): 
-				polarthetas.remove(c)
-			elif min(drain_angles)<= c <= max(drain_angles): 
-				polarthetas.remove(c)
+		polarthetas = [np.arctan2(c[1],c[0]) for c in list_intersections]
+		heater_angles = [np.arctan2(c[1],c[0]) for c in heater_coords]
+		drain_angles = [np.arctan2(c[1],c[0]) for c in drain_coords]
+		#for c in polarthetas: 
+			#if min(heater_angles)<= c <= max(heater_angles): 
+				#polarthetas.remove(c)
+			#elif min(drain_angles)<= c <= max(drain_angles): 
+				#polarthetas.remove(c)
 		nds, bins = np.histogram(polarthetas,  bins=100)
 		Tnorm = (nds/(binwidth))/(nheater/(max(heater_angles)-min(heater_angles)))
-		centers = bins[:-1] + binwidth/2
+		centers = np.array(bins[:-1] + binwidth/2)*180/np.pi
 		return [centers, Tnorm]
 
 #np.arange(0, 2*np.pi + binwidth, binwidth
@@ -96,10 +107,15 @@ class Rectangle():
 		self.reconstructed = LinearRing(self.coordinates)
 
 	def grad(self, x, y):
-		if y > (self.lowerleft[1]+ self.width/2): 
+		if x == self.lowerleft[0]: 
+			return np.array([-1, 0])
+		elif x == self.lowerright[0]: 
+			return np.array([1, 0])
+		elif y > (self.lowerleft[1]+ self.width/2): 
 			return np.array([0, 1])
 		else: 
 			return np.array([0, -1])
+
 			
 
 	def lead_coordinates(self, kind):
@@ -107,6 +123,10 @@ class Rectangle():
 			return [self.lowerright, self.upperright]
 		elif kind == 's': 
 			return [self.upperleft, self.lowerleft]
+		elif kind =='ld':
+			return [self.lowerright, [self.lowerright[0]-5, 0]] 
+		elif kind == 'ls': 
+			return [[5,0], self.lowerleft]
 		elif kind == 't1': 
 			return [[136, 0], [131, 0]]
 		elif kind == 't2': 
@@ -133,7 +153,7 @@ class Rectangle():
 				data.append(c[0])
 
 		nds, bins = np.histogram(data, bins=np.arange(left_edge, right_edge+ binwidth, binwidth))
-		Tnorm = (nds/(binwidth*2))/(nheater/self.width)
+		Tnorm = (nds/(binwidth*2))/(nheater/5)
 		centers = bins[:-1] + binwidth/2
 		return [centers, Tnorm]
 		

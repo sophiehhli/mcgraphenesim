@@ -57,6 +57,13 @@ class Source(Lead):
 		intersection = self.get_intersection(particle)
 		return point.Particle(intersection.x, intersection.y)
 
+	def alternate_response(self, particle, f): 
+		intersection = self.get_intersection(particle)
+		if np.random.random() < f:
+			return interaction.diffuse_reflection(self.normal, intersection)
+		else:
+			return interaction.c_specular_reflection(particle, self.normal, intersection)
+
 class Drain(Lead): 
 	def __init__(self, coordinates): 
 		super().__init__(coordinates)
