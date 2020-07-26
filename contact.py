@@ -30,6 +30,7 @@ class Lead():
 		self.line = LineString([tuple(self.start), tuple(self.end)])
 		self.normal = -grad.grad_line(self.start, self.end)
 		self.n_collisions = 0
+		self.length = np.sqrt((self.start[0]-self.end[0])**2+(self.start[1]-self.end[1])**2)
 
 	def check_intersection(self, particle):
 		line_string_coord = particle.line_coordinates()
@@ -78,7 +79,7 @@ class Drain(Lead):
 		return point.Particle(intersection.x, intersection.y)
 
 class Thermometer(Lead): 
-	def __init__(self, coordinates, emissivity = 0.3):
+	def __init__(self, coordinates, emissivity = 0.4):
 		super().__init__(coordinates)
 		self.emissivity = emissivity
 
@@ -97,3 +98,6 @@ class Thermometer(Lead):
 		else: 
 			intersection = self.get_intersection(particle)
 			return interaction.c_specular_reflection(particle, self.normal, intersection)
+
+	def t_norm(self, heater): 
+		return (self.n_collisions/self.length)/(heater.n_collisions/heater.length)

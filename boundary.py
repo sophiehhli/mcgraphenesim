@@ -126,11 +126,19 @@ class Rectangle():
 		elif kind =='ld':
 			return [self.lowerright, [self.lowerright[0]-5, 0]] 
 		elif kind == 'ls': 
-			return [[5,0], self.lowerleft]
+			return [[3,0], self.lowerleft]
 		elif kind == 't1': 
 			return [[136, 0], [131, 0]]
 		elif kind == 't2': 
 			return [[17, 0], [12, 0]]
+		elif kind == '3t1': 
+			return [[135, 0], [132, 0]]
+		elif kind == '3t2': 
+			return [[16, 0], [13, 0]]
+		elif kind == 'st1': 
+			return [[135, 0], [134, 0]]
+		elif kind == 'st2': 
+			return [[15, 0], [14, 0]]
 
 	def plot(self): 
 		"""plots the rectangle in matplotlib""" 
@@ -138,22 +146,26 @@ class Rectangle():
 		ax.set_aspect(1)
 		ax.set_axisbelow(True)
 		ax.add_patch(matplotlib.patches.Rectangle(self.lowerleft, self.length, self.width, fill=False, ec = 'purple'))
-		plt.title('Rectagular Boundary', fontsize=8)
+		plt.title('Rectangular boundary, 5 mm thermometers', fontsize=8)
 		plt.xlim(-5, self.length + 5)
 		plt.ylim(-5, self.width + 5)
 		plt.grid(linestyle='--')
+		plt.xlabel("x (mm)")
+		plt.ylabel("y (mm)")
 
-	def temperature_hist(self, list_intersections, nheater, binwidth, drain, source): 
+	def temperature_hist(self, list_intersections, nheater, binwidth, source, drain): 
 		data = []
-		left_edge = 0
-		right_edge = self.length
+		left_edge = self.lowerleft[0]
+		right_edge = self.lowerright[0]-self.lowerleft[0]
 
 		for c in list_intersections: 
-			if c[0] not in [left_edge, right_edge]: 
+			if c[0] not in [left_edge, right_edge]:
 				data.append(c[0])
 
-		nds, bins = np.histogram(data, bins=np.arange(left_edge, right_edge+ binwidth, binwidth))
-		Tnorm = (nds/(binwidth*2))/(nheater/5)
+		nds, bins = np.histogram(data, bins=np.arange(left_edge, right_edge + binwidth, binwidth))
+		
+		Tnorm = (nds/(binwidth*2))/(nheater/source.length)
+		
 		centers = bins[:-1] + binwidth/2
 		return [centers, Tnorm]
 		
