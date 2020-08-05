@@ -24,8 +24,3 @@ class Particle():
 		end_coord = self.pos + expanded_dir
 		line = [(start_coord[0], start_coord[1]), (end_coord[0], end_coord[1])]
 		return line
-
-
-#x_cords = [start_coord[0], end_coord[0]]
-		#y_cords = [start_coord[1], end_coord[1]]
-		#plt.plot(x_cords, y_cords, 'k-', lw=0.5)

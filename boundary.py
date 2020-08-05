@@ -17,8 +17,6 @@ class Circle():
 		self.width = width
 		self.height = height 
 		self.radius = radius
-		# reconstruct the circle with the shapely library 
-		# center point with a buffer of radius around it 
 		self.center_point = Point(self.x0, self.y0)
 		self.reconstructed = self.center_point.buffer(self.radius).boundary
 
@@ -27,17 +25,22 @@ class Circle():
 		return ((x-self.x0)/self.width)**2 + ((y - self.y0)/self.height)**2 - self.radius**2
 
 	def grad(self, x, y): 
-		"""gradient of the dedined cicle at point (x,y)"""
+		"""calls function to calculate the gradient of the cicle at point (x,y)"""
 		return grad.grad_circle(x, y, self.x0, self.y0, self.width, self.height)
 
 	def lead_coordinates(self, kind, angle=1/30*np.pi):
+		"""returns the lead coordinates depending kind of lead to be constructed"""
 		if kind == 's': 
+			#source lead 
 			center = 0
 		elif kind == 'd': 
+			#drain lead 
 			center = np.pi
 		elif kind == 't1': 
+			#top thermometer 
 			center = np.pi*1/2
 		elif kind == 't2':
+			#bottom thermometer 
 			center = np.pi*3/2 
 		a1 = (center + angle/2)
 		a2 = (center - angle/2)
@@ -55,7 +58,7 @@ class Circle():
 		
 
 	def plot(self): 
-		"""plot the implicit equation with matplotlib"""
+		"""plot the implicit equation of the circle boundary with matplotlib"""
 		xspace = np.linspace(-self.radius, self.radius, 1000)
 		yspace = np.linspace(-self.radius, self.radius, 1000)
 		X,Y = np.meshgrid(xspace,yspace)
@@ -69,6 +72,7 @@ class Circle():
 		plt.grid(linestyle='--')
 
 	def plot_collisions(self, list_intersections): 
+		"""plots the collision by theta"""
 		polarthetas = [np.arctan(c[1]/c[0]) for c in list_intersections]
 		plt.hist(polarthetas,100)
 		plt.title('Interactions by polar angle', fontsize=8)
@@ -77,20 +81,16 @@ class Circle():
 		plt.show()
 
 	def temperature_hist(self, list_intersections, nheater, binwidth, drain_coords, heater_coords): 
+		"""plots the temperaure profile around the circle"""
 		polarthetas = [np.arctan2(c[1],c[0]) for c in list_intersections]
 		heater_angles = [np.arctan2(c[1],c[0]) for c in heater_coords]
 		drain_angles = [np.arctan2(c[1],c[0]) for c in drain_coords]
-		#for c in polarthetas: 
-			#if min(heater_angles)<= c <= max(heater_angles): 
-				#polarthetas.remove(c)
-			#elif min(drain_angles)<= c <= max(drain_angles): 
-				#polarthetas.remove(c)
 		nds, bins = np.histogram(polarthetas,  bins=100)
 		Tnorm = (nds/(binwidth))/(nheater/(max(heater_angles)-min(heater_angles)))
 		centers = np.array(bins[:-1] + binwidth/2)*180/np.pi
 		return [centers, Tnorm]
 
-#np.arange(0, 2*np.pi + binwidth, binwidth
+
 class Rectangle(): 
 	"""attributes of a 2D graphene rectangle""" 
 	def __init__(self, length = 20, width = 2):
@@ -107,6 +107,7 @@ class Rectangle():
 		self.reconstructed = LinearRing(self.coordinates)
 
 	def grad(self, x, y):
+	"""calculates the gradient of the reactangle depending on the point"""
 		if x == self.lowerleft[0]: 
 			return np.array([-1, 0])
 		elif x == self.lowerright[0]: 
@@ -119,25 +120,36 @@ class Rectangle():
 			
 
 	def lead_coordinates(self, kind):
+	"""different options for the coordinates of different leads"""
 		if kind == 'd':
+			# drain lead on the vertical edge 
 			return [self.lowerright, self.upperright]
 		elif kind == 's': 
+			# source lead on the vertical edge 
 			return [self.upperleft, self.lowerleft]
 		elif kind =='ld':
+			# drain lead on the horizontal edge
 			return [self.lowerright, [self.lowerright[0]-5, 0]] 
 		elif kind == 'ls': 
+			# source lead on the horizontal edge 
 			return [[3,0], self.lowerleft]
 		elif kind == 't1': 
+			# 5mm thermometer near drain 
 			return [[136, 0], [131, 0]]
 		elif kind == 't2': 
+			# 5mm thermometer near source 
 			return [[17, 0], [12, 0]]
 		elif kind == '3t1': 
+			# 3mm thermometer near drain 
 			return [[135, 0], [132, 0]]
 		elif kind == '3t2': 
+			# 3mm thermoemter near source
 			return [[16, 0], [13, 0]]
 		elif kind == 'st1': 
-			return [[135, 0], [134, 0]]
+			# 1mm thermometer near drain 
+			return [[134, 0], [133, 0]]
 		elif kind == 'st2': 
+			# 1mm thermoemter near source
 			return [[15, 0], [14, 0]]
 
 	def plot(self): 
@@ -154,6 +166,7 @@ class Rectangle():
 		plt.ylabel("y (mm)")
 
 	def temperature_hist(self, list_intersections, nheater, binwidth, source, drain): 
+		""" converts the number of collisions on a specific section to temperature profile"""
 		data = []
 		left_edge = self.lowerleft[0]
 		right_edge = self.lowerright[0]-self.lowerleft[0]
