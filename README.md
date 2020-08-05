@@ -15,7 +15,7 @@ Robert L. Blinkenberg SURF Fellow
 ## Contents
 [```boundary.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/boundary.py) Classes that define the boundary of the graphene flake 
 
-[```contact.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/contact.py) Classes thaat define and contacts/leads to the flake, for instance, source, drain or thermometer leads 
+[```contact.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/contact.py) Classes that define and contacts/leads to the flake, for instance, source, drain or thermometer leads 
 
 [```grad.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/grad.py) Functions to calculate gradient at a point 
 
