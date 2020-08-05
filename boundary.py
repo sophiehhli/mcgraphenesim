@@ -9,8 +9,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 class Circle():
-	"""attributes of a 2D graphene circle"""
 	def __init__(self, x0=0, y0=0, width=1, height=1, radius=1): 
+		"""attributes of a 2D graphene circle"""
 		self.name = 'circle'
 		self.x0 = x0 
 		self.y0 = y0
@@ -91,9 +91,9 @@ class Circle():
 		return [centers, Tnorm]
 
 
-class Rectangle(): 
-	"""attributes of a 2D graphene rectangle""" 
+class Rectangle():  
 	def __init__(self, length = 20, width = 2):
+		"""attributes of a 2D graphene rectangle"""
 		self.name = 'rectangle'
 		self.length = length 
 		self.width = width 
@@ -107,7 +107,7 @@ class Rectangle():
 		self.reconstructed = LinearRing(self.coordinates)
 
 	def grad(self, x, y):
-	"""calculates the gradient of the reactangle depending on the point"""
+		"""calculates the gradient of the reactangle depending on the point"""
 		if x == self.lowerleft[0]: 
 			return np.array([-1, 0])
 		elif x == self.lowerright[0]: 
@@ -120,7 +120,7 @@ class Rectangle():
 			
 
 	def lead_coordinates(self, kind):
-	"""different options for the coordinates of different leads"""
+		"""different options for the coordinates of different leads"""
 		if kind == 'd':
 			# drain lead on the vertical edge 
 			return [self.lowerright, self.upperright]

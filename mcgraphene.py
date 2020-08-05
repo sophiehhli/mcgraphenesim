@@ -9,11 +9,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-"""call plots unrelated to main graphene simulation""" 
-#plotfunc.plot_mfp_from_file('inverse_mfp_data2.dat')
-
-#theta_array = interaction.sample_cos_large_dist(1000000)
-#plotfunc.plot_theta_polar(theta_array)
 
 """choose circular or recatngular boundary by creating instance from class""" 
 #bound = boundary.Circle(0,0,1,1,10)
@@ -27,12 +22,13 @@ th2 = contact.Thermometer(bound.lead_coordinates('st2'))
 contacts = [source, drain, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
-f_list = [0] # f denotes probability of diffuse scattering 
-n_phonon = 1 # number of phonons to be relareased by the source
+f_list = [0,1] # f denotes probability of diffuse scattering 
+n_phonon = 100 # number of phonons to be relareased by the source
+binwidth = 0.5 # binning for any histograms to be created
 
 """lists that will be added to in the course of the simulation""" 
 emission_points= [] #array of interaction points at the boundary 
-inverse_mfp = [] #array of the inverse mfp 
+inverse_mfp = [] #array of the inverse mfp
 
 # start timer for loop 
 tic = time.perf_counter()
@@ -42,11 +38,13 @@ for f in range(len(f_list)):
 	i = 1 #counter for the number of phonons released 
 	fintersections = [] #list of the intersection for the f 
 
-	while i <= n_phonon: 
+	while i <= n_phonon:
+		"""loop until the specifed number of phonons has been released"""
 		curphonon = interaction.contact_emmision(source)
 		fintersections.append(curphonon.coordinates)
 
-		while True: 
+		while True:
+			"""loop throug until phonon collides with source or drain"""
 			end = False
 			# collision with thermometer 1 
 			if th1.check_intersection(curphonon):
@@ -91,23 +89,3 @@ for f in range(len(f_list)):
 # end timer for the loop 
 toc = time.perf_counter()
 print(f"Executed loop in {toc - tic:0.4f} seconds")
-
-def show_boundary(bound, contacts): 
-	bound.plot()
-	for c in contacts: c.plot()
-	plt.show()
-
-def save_inverse_mfp_data(f_list, inverse_mfp, name):
-	data = np.column_stack((f_list, inverse_mfp))
-	header = "f values, inverse mfp"
-	np.savetxt(name+'.dat', data, header = header)
-
-def plot_temp_profile(emission_points, n_phonon, binwidth, source, drain, f_list, bound): 
-	histograms = []
-	for c in emission_points: 
-		hist = bound.temperature_hist(c, n_phonon, binwidth, source, drain)
-		histograms.append(hist)
-	plotfunc.plot_multi_tnorm_catersian(histograms, f_list, n_phonon, bound)
-	plt.show()
-
-mfp = plotfunc.mean_free_path(drain, source, th2, th1, bound)

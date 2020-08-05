@@ -29,7 +29,17 @@ def save_hist(array, bound):
 	loc = 'data/histograms/'
 	np.savetxt(loc+bound.name+date+'hist.txt', array, delimiter = ' ')
 
-def plot_multi_tnorm_catersian(histograms, fs, n, bound): 
+def save_inverse_mfp_data(f_list, inverse_mfp, name):
+	data = np.column_stack((f_list, inverse_mfp))
+	header = "f values, inverse mfp"
+	np.savetxt(name+'.dat', data, header = header)
+
+def show_boundary(bound, contacts): 
+	bound.plot()
+	for c in contacts: c.plot()
+	plt.show()
+
+def plot_tnorm_cartesian(histograms, fs, n, bound): 
 	"""plots the tempetaure profile of multiple f values on the same plot
 	suitable for boundaries best represented in cartesian coordinates"""
 	fig, ax = plt.subplots()
@@ -45,7 +55,7 @@ def plot_multi_tnorm_catersian(histograms, fs, n, bound):
 	ax.set_ylim(0,1)
 	ax.set_xlim(0,bound.length)
 
-def plot_multi_tnorm_polar(histograms, fs, n): 
+def plot_tnorm_polar(histograms, fs, n): 
 	"""plots the the temperature profile of multiple f values on the same plot
 	suitable for boundaries best represented in polar coordinates""" 
 	fig, ax = plt.subplots()
@@ -59,6 +69,23 @@ def plot_multi_tnorm_polar(histograms, fs, n):
 	plt.legend(handles = plots, loc='upper right')#, bbox_to_anchor=(0., 1.02, 1., .102))
 	ax.tick_params(direction="in", right=True)
 
+def histogram_plot_cart(emission_points, n_phonon, binwidth, source, drain, f_list, bound):
+	"""first produces the histogram values and then plots each historgram, for cartesian"""  
+	histograms = []
+	for c in emission_points: 
+		hist = bound.temperature_hist(c, n_phonon, binwidth, source, drain)
+		histograms.append(hist)
+	plot_multi_tnorm_catersian(histograms, f_list, n_phonon, bound)
+	plt.show()
+
+def histogram_plot_polar(emission_points, n_phonon, binwidth, source, drain, f_list, bound):
+	"""first produces the histogram values and then plots each historgram, for polar """  
+	histograms = []
+	for c in emission_points: 
+		hist = bound.temperature_hist(c, n_phonon, binwidth, source, drain)
+		histograms.append(hist)
+	plot_tnorm_polar(histograms, f_list, n_phonon, bound)
+	plt.show()
 
 def plot_theta_polar(theta_array): 
 	"""a polar plot of points, compared to cosine(theta)"""
