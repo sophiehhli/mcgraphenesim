@@ -26,4 +26,4 @@ Robert L. Blinkenberg SURF Fellow
 
 [```plotfunc.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/plotfunc.py) Functions to plot various outputs of the simulation 
 
-[```mcgraphene.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/mcgraphene.py) Script to be executed, performs main loop of the simulation, points form which to call plotting functions. 
+[```mcgraphene.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/mcgraphene.py) Script to be executed, performs main loop of the simulation, point from which to call plotting functions. 
