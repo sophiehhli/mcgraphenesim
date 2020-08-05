@@ -11,3 +11,18 @@ Student: Sophie Li
 Mentors: Michael Roukes, Stevan Nadj-Perge, and Raj Katti 
 
 Robert L. Blinkenberg SURF Fellow
+
+## Contents
+[```boundary.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/boundary.py) Classes that define the boundary of the graphene flake 
+
+[```contact.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/contact.py) Classes thaat define and contacts/leads to the flake, for instance, source, drain or thermometer leads 
+
+[```grad.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/grad.py) Functions to calculate gradient at a point 
+
+[```interaction.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/interaction.py) Class for Intersection object, functions handeling interactions
+
+[```point.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/point.py) Point class, object with position and direction, either phonon or electron 
+
+[```plotfunc.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/plotfunc.py) Functions to plot various outputs of the simulation 
+
+[```mcgraphene.py```](https://github.com/sophiehhli/mcgraphenesim/blob/master/mcgraphene.py) Script to be executed, performs main loop of the simulation, points form which to call plotting functions. 
