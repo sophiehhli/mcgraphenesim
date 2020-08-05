@@ -8,6 +8,7 @@ The work so far was adapted from the Monte Carlo simulations in ["Phonon radiati
 
 ## Authors 
 Student: Sophie Li 
+
 Mentors: Michael Roukes, Stevan Nadj-Perge, and Raj Katti 
 
 Robert L. Blinkenberg SURF Fellow
