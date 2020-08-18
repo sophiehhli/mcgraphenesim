@@ -133,10 +133,10 @@ class Rectangle():
 		elif kind == 'ls': 
 			# source lead on the horizontal edge 
 			return [[3,0], self.lowerleft]
-		elif kind == 't1': 
+		elif kind == '5t1': 
 			# 5mm thermometer near drain 
 			return [[136, 0], [131, 0]]
-		elif kind == 't2': 
+		elif kind == '5t2': 
 			# 5mm thermometer near source 
 			return [[17, 0], [12, 0]]
 		elif kind == '3t1': 

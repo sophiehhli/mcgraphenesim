@@ -8,26 +8,27 @@ import time
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import datetime
 
 #plotfunc.plot_inverse_mfp_from_file('data/inverse_mfp/aug_11_inverse_mfp.dat')
 #plotfunc.plot_mfp_from_file('data/inverse_mfp/aug_11_inverse_mfp.dat')
 
 """choose circular or recatngular boundary by creating instance from class""" 
 #bound = boundary.Circle(0,0,1,1,10)
-bound = boundary.Rectangle(length = 150, width = 5)
+bound = boundary.Rectangle(length = 10, width = 1)
 
 """create instance of the leads to include in the simulation""" 
-therm_len = '3'
-source = contact.Source(bound.lead_coordinates('ls'))
-drain = contact.Drain(bound.lead_coordinates('ld'))
-th1 = contact.Thermometer(bound.lead_coordinates(therm_len+'t1'))
-th2 = contact.Thermometer(bound.lead_coordinates(therm_len+'t2'))
-contacts = [source, drain, th1, th2] #save in list for easier access
+therm_len = '0'
+source = contact.Source(bound.lead_coordinates('s'))
+drain = contact.Drain(bound.lead_coordinates('d'))
+#th1 = contact.Thermometer(bound.lead_coordinates(therm_len+'t1'))
+#th2 = contact.Thermometer(bound.lead_coordinates(therm_len+'t2'))
+contacts = [source, drain]#, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
-f_list = [0, 0.03] # f denotes probability of diffuse scattering 
+f_list = [0, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0] # f denotes probability of diffuse scattering 
 n_phonon = 10**5 # number of phonons to be released by the source
-binwidth = 0.5 # binning for any histograms to be created
+binwidth = 0.1 # binning for any histograms to be created
 
 """lists that will be added to in the course of the simulation""" 
 emission_points= [] #array of interaction points at the boundary 
@@ -36,7 +37,7 @@ inverse_mfp = [] #array of the inverse mfp
 plotfunc.show_boundary(bound,contacts)
 # start timer for loop 
 tic = time.perf_counter()
-
+print("timer started at: "+ str(datetime.datetime.now()))
 # main simuation loop 
 for f in range(len(f_list)): 
 	i = 1 #counter for the number of phonons released 
@@ -51,13 +52,13 @@ for f in range(len(f_list)):
 			"""loop throug until phonon collides with source or drain"""
 			end = False
 			# collision with thermometer 1 
-			if th1.check_intersection(curphonon):
-				newphonon = th1.response(curphonon)
+			#if th1.check_intersection(curphonon):
+				#newphonon = th1.response(curphonon)
 			# collision with thermometer 2
-			elif th2.check_intersection(curphonon):
-				newphonon = th2.response(curphonon)
+			#elif th2.check_intersection(curphonon):
+				#newphonon = th2.response(curphonon)
 			# collusion with drain lead 
-			elif drain.check_intersection(curphonon): 
+			if drain.check_intersection(curphonon): 
 				newphonon = drain.response(curphonon)
 				#interaction.plot_trajectory(curphonon, newphonon)
 				end = True #triggers end of loop 
@@ -78,7 +79,8 @@ for f in range(len(f_list)):
 			curphonon = newphonon
 		
 		i += 1 # add to counter of number of phonons 
-	
+		if i == n_phonon/2:
+			print('50%')
 	print('f = ' +str(f_list[f]) +' complete') # keep track of simulation progress 
 	print('Transmitted: '+ str(plotfunc.transmitted_precent(drain.n_collisions, source.n_collisions))) #print transmission rate
 	
