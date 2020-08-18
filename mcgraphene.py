@@ -5,31 +5,35 @@ import contact
 import plotfunc
 import time 
 
+import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-import numpy as np
 
+#plotfunc.plot_inverse_mfp_from_file('data/inverse_mfp/aug_11_inverse_mfp.dat')
+#plotfunc.plot_mfp_from_file('data/inverse_mfp/aug_11_inverse_mfp.dat')
 
 """choose circular or recatngular boundary by creating instance from class""" 
 #bound = boundary.Circle(0,0,1,1,10)
 bound = boundary.Rectangle(length = 150, width = 5)
 
 """create instance of the leads to include in the simulation""" 
+therm_len = '3'
 source = contact.Source(bound.lead_coordinates('ls'))
 drain = contact.Drain(bound.lead_coordinates('ld'))
-th1 = contact.Thermometer(bound.lead_coordinates('st1'))
-th2 = contact.Thermometer(bound.lead_coordinates('st2'))
+th1 = contact.Thermometer(bound.lead_coordinates(therm_len+'t1'))
+th2 = contact.Thermometer(bound.lead_coordinates(therm_len+'t2'))
 contacts = [source, drain, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
-f_list = [0,1] # f denotes probability of diffuse scattering 
-n_phonon = 100 # number of phonons to be relareased by the source
+f_list = [0, 0.03] # f denotes probability of diffuse scattering 
+n_phonon = 10**5 # number of phonons to be released by the source
 binwidth = 0.5 # binning for any histograms to be created
 
 """lists that will be added to in the course of the simulation""" 
 emission_points= [] #array of interaction points at the boundary 
 inverse_mfp = [] #array of the inverse mfp
 
+plotfunc.show_boundary(bound,contacts)
 # start timer for loop 
 tic = time.perf_counter()
 
@@ -79,13 +83,15 @@ for f in range(len(f_list)):
 	print('Transmitted: '+ str(plotfunc.transmitted_precent(drain.n_collisions, source.n_collisions))) #print transmission rate
 	
 	# caluclate mfp and append the inverse to the array for current f value 
-	mfp = plotfunc.mean_free_path(drain, source, th2, th1, bound)
-	inverse_mfp.append(1/mfp)
+	#mfp = plotfunc.mean_free_path(drain, source, th2, th1, bound)
+	#inverse_mfp.append(1/mfp)
 	
 	for c in contacts: c.n_collisions = 0 #reset the collision count for the leads 
-	
+	plotfunc.save_interactions(fintersections, bound, f_list[f], therm_len, n_phonon)
 	emission_points.append(fintersections) #add array of intersection to the nested array 
 
 # end timer for the loop 
 toc = time.perf_counter()
 print(f"Executed loop in {toc - tic:0.4f} seconds")
+plotfunc.histogram_plot_cart(emission_points, n_phonon, binwidth, source, drain, f_list, bound)
+#plotfunc.save_inverse_mfp_data(f_list, inverse_mfp, "aug_11_inverse_mfp")

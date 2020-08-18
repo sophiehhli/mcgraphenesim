@@ -17,22 +17,29 @@ def mean_free_path(drain, source, th_warm, th_cold, bound):
 	l_mcs = 3/4 * (del_x/del_t_norm)*(a_heater/a_cross_sec)*p_norm
 	return l_mcs
 
-def save_interactions(array, bound):
+def save_interactions(array, bound,f,therm_len,n_phonon):
 	"""saves the interaction points in a file""" 
-	date = str(datetime.datetime.now()) 
-	loc = 'data/'+bound.name+'/'
-	np.savetxt(loc+bound.name+date+'.txt', array, delimiter = ' ')
+	date = str(datetime.date.today())
+	loc = '../data_mcgraphenesim/'+bound.name+'/'
+	fstr = '_f'+str(f)+'_'
+	length = '_'+therm_len+'mm'
+	name = loc+date+length+fstr+str(n_phonon)+'.dat'
+	np.savetxt(name, array)
 
-def save_hist(array, bound): 
+def save_hist(array, bound, f): 
 	"""saves the historgam data in a file""" 
-	date = str(datetime.datetime.now()) 
-	loc = 'data/histograms/'
-	np.savetxt(loc+bound.name+date+'hist.txt', array, delimiter = ' ')
+	date = str(datetime.date.today())
+	loc = '../data_mcgraphenesim/histograms'+bound.name+'/'
+	fstr = '_f'+str(f)+'_'
+	length = '_'+therm_len+'mm'
+	name = loc+date+length+fstr+str(n_phonon)+'.dat'
+	np.savetxt(name, array)
 
 def save_inverse_mfp_data(f_list, inverse_mfp, name):
 	data = np.column_stack((f_list, inverse_mfp))
 	header = "f values, inverse mfp"
-	np.savetxt(name+'.dat', data, header = header)
+	loc = '.../data_mcgraphenesim/inverse_mfp/'
+	np.savetxt(loc+name+'.dat', data, header = header)
 
 def show_boundary(bound, contacts): 
 	bound.plot()
@@ -75,7 +82,8 @@ def histogram_plot_cart(emission_points, n_phonon, binwidth, source, drain, f_li
 	for c in emission_points: 
 		hist = bound.temperature_hist(c, n_phonon, binwidth, source, drain)
 		histograms.append(hist)
-	plot_multi_tnorm_catersian(histograms, f_list, n_phonon, bound)
+	plot_tnorm_cartesian(histograms, f_list, n_phonon, bound)
+	plt.savefig("fig10remake_aug_10.png")
 	plt.show()
 
 def histogram_plot_polar(emission_points, n_phonon, binwidth, source, drain, f_list, bound):
@@ -85,6 +93,7 @@ def histogram_plot_polar(emission_points, n_phonon, binwidth, source, drain, f_l
 		hist = bound.temperature_hist(c, n_phonon, binwidth, source, drain)
 		histograms.append(hist)
 	plot_tnorm_polar(histograms, f_list, n_phonon, bound)
+	plt.savefig("fig10remake_aug_10.png")
 	plt.show()
 
 def plot_theta_polar(theta_array): 
