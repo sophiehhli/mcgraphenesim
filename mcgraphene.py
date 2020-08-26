@@ -16,7 +16,11 @@ import datetime
 """choose circular or recatngular boundary by creating instance from class""" 
 #bound = boundary.Circle(0,0,1,1,10)
 bound = boundary.Rectangle(length = 10, width = 1)
+polygon = boundary.Polygon([(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(16,4),(16,2),(14,2),(14,0),(12,0),(12,2)])
 
+polygon.plot()
+plt.show()
+'''
 """create instance of the leads to include in the simulation""" 
 therm_len = '0'
 source = contact.Source(bound.lead_coordinates('s'))
@@ -27,7 +31,7 @@ contacts = [source, drain]#, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
 f_list = [0, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0] # f denotes probability of diffuse scattering 
-n_phonon = 10**5 # number of phonons to be released by the source
+n_phonon = 10**1# number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 
 """lists that will be added to in the course of the simulation""" 
@@ -96,4 +100,4 @@ for f in range(len(f_list)):
 toc = time.perf_counter()
 print(f"Executed loop in {toc - tic:0.4f} seconds")
 plotfunc.histogram_plot_cart(emission_points, n_phonon, binwidth, source, drain, f_list, bound)
-#plotfunc.save_inverse_mfp_data(f_list, inverse_mfp, "aug_11_inverse_mfp")
+#plotfunc.save_inverse_mfp_data(f_list, inverse_mfp, "aug_11_inverse_mfp")'''

@@ -1,6 +1,7 @@
 from shapely.geometry import Point
 from shapely.geometry import LineString
 from shapely.geometry import LinearRing
+import shapely
 
 import grad
 
@@ -182,3 +183,46 @@ class Rectangle():
 		centers = bins[:-1] + binwidth/2
 		return [centers, Tnorm]
 		
+class Polygon():
+	def __init__(self, vertices): 
+		"""attributes of a 2D graphene circle"""
+		self.name = 'polygon'
+		self.vertices = vertices
+		self.n_vertices = len(vertices)
+		self.reconstructed = shapely.geometry.Polygon(vertices)
+		self.xy_sep_lines = self.xy_sep_lines()
+		self.x_max = self.min_max()[0][0]
+		self.y_max = self.min_max()[0][1]
+		self.x_min = self.min_max()[1][0]
+		self.y_min = self.min_max()[1][1]
+
+	def min_max(self):
+		x = [lst[0] for lst in self.vertices]
+		y = [lst[1] for lst in self.vertices]
+		return[[max(x), max(y)], [min(x), min(y)]]
+	
+	def xy_sep_lines(self): 
+		lines = []
+		for i in range(len(self.vertices)):
+			print(i)
+			if i == len(self.vertices)-1: 
+				x = [self.vertices[i][0], self.vertices[0][0]]
+				y = [self.vertices[i][1], self.vertices[0][1]]
+			else: 
+				x = [self.vertices[i][0], self.vertices[i+1][0]]
+				y = [self.vertices[i][1], self.vertices[i+1][1]]
+			lines.append([x,y])
+		return lines
+	
+	def plot(self): 
+		ax = plt.gca()
+		ax.set_aspect(1)
+		for i in self.xy_sep_lines: 
+			plt.plot(i[0], i[1], color='purple')
+		plt.xlim(self.x_min-5, self.x_max+5) 
+		plt.ylim(self.y_min-5, self.y_max+5)
+		plt.grid(linestyle='--')
+		plt.xlabel("x (mm)")
+		plt.ylabel("y (mm)")
+
+
