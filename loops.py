@@ -29,8 +29,8 @@ def polygon_loop(end, curphonon, f, bound, contacts):
 	for c in contacts: 
 		if line == c.coordinates: 
 			newphonon = c.response(curphonon)
-			#interaction.plot_trajectory(curphonon, newphonon)
+			interaction.plot_trajectory(curphonon, newphonon)
 			return [True, newphonon]
 	newphonon = interaction.polygon_boundary_response(f, curphonon, bound, contacts)
-	#interaction.plot_trajectory(curphonon, newphonon)
+	interaction.plot_trajectory(curphonon, newphonon)
 	return [False, newphonon]

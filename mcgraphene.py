@@ -32,21 +32,20 @@ drain = contact.Drain(bound.lead_coordinates('v2'))
 contacts = [source, drain]#, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
-f_list = [0.0, 0.2] # f denotes probability of diffuse scattering 
-n_phonon = 100 # number of phonons to be released by the source
+f_list = [1] # f denotes probability of diffuse scattering 
+n_phonon = 1 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 
 """lists that will be added to in the course of the simulation""" 
 emission_points= [] #array of interaction points at the boundary 
 inverse_mfp = [] #array of the inverse mfp
 
-plotfunc.show_boundary(bound,contacts)
+#plotfunc.show_boundary(bound,contacts)
+bound.plot()
 # start timer for loop 
 tic = time.perf_counter()
 print("timer started at: "+ str(datetime.datetime.now()))
 # main simuation loop 
-
-bound.plot()
 
 for f in range(len(f_list)): 
 	released = 1 #counter for the number of phonons released 
@@ -77,8 +76,9 @@ for f in range(len(f_list)):
 	for c in contacts: c.n_collisions = 0 #reset the collision count for the leads 
 	#plotfunc.save_interactions(fintersections, bound, f_list[f], therm_len, n_phonon)
 	emission_points.append(fintersections) #add array of intersection to the nested array 
-bar.finish()
+
 # end timer for the loop 
+bar.finish()
 toc = time.perf_counter()
 print(f"Executed loop in {toc - tic:0.4f} seconds")
 plt.show()

@@ -11,7 +11,7 @@ def grad_line(start, end):
 	"""gradient of a line with start and end points"""
 	v = np.zeros(2)
 	v[0] = end[1] - start[1]
-	v[1] = end[0] - start[0]
+	v[1] = -1* (end[0] - start[0])
 	return v/np.linalg.norm(v)
 
 """ Must be carful with how the start and end of a line are inputted
