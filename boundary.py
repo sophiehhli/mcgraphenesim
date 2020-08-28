@@ -118,8 +118,6 @@ class Rectangle():
 		else: 
 			return np.array([0, -1])
 
-			
-
 	def lead_coordinates(self, kind):
 		"""different options for the coordinates of different leads"""
 		if kind == 'd':
@@ -185,16 +183,22 @@ class Rectangle():
 		
 class Polygon():
 	def __init__(self, vertices): 
-		"""attributes of a 2D graphene circle"""
+		"""attributes of a 2D polygon"""
 		self.name = 'polygon'
 		self.vertices = vertices
 		self.n_vertices = len(vertices)
 		self.reconstructed = shapely.geometry.Polygon(vertices)
 		self.xy_sep_lines = self.xy_sep_lines()
+		self.lines_coords = self.line_coords()
+		self.construct_lines = [LineString(coord) for coord in self.lines_coords]
 		self.x_max = self.min_max()[0][0]
 		self.y_max = self.min_max()[0][1]
 		self.x_min = self.min_max()[1][0]
 		self.y_min = self.min_max()[1][1]
+
+	def grad(self, line): 
+		start, end = line
+		return grad.grad_line(start, end)
 
 	def min_max(self):
 		x = [lst[0] for lst in self.vertices]
@@ -204,7 +208,6 @@ class Polygon():
 	def xy_sep_lines(self): 
 		lines = []
 		for i in range(len(self.vertices)):
-			print(i)
 			if i == len(self.vertices)-1: 
 				x = [self.vertices[i][0], self.vertices[0][0]]
 				y = [self.vertices[i][1], self.vertices[0][1]]
@@ -213,7 +216,17 @@ class Polygon():
 				y = [self.vertices[i][1], self.vertices[i+1][1]]
 			lines.append([x,y])
 		return lines
-	
+
+	def line_coords(self): 
+		lines = []
+		for i in range(len(self.vertices)):
+			if i == len(self.vertices)-1: 
+				start_end = [self.vertices[i], self.vertices[0]]
+			else: 
+				start_end = [self.vertices[i], self.vertices[i+1]]
+			lines.append(start_end)
+		return lines
+
 	def plot(self): 
 		ax = plt.gca()
 		ax.set_aspect(1)
@@ -225,4 +238,11 @@ class Polygon():
 		plt.xlabel("x (mm)")
 		plt.ylabel("y (mm)")
 
-
+	def lead_coordinates(self, kind):
+		"""different options for the coordinates of different leads"""
+		if kind == 'i+':
+			# source lead on the vertical edge 
+			return [[0,4],[0,2]]
+		if kind == 'v2': 
+			# drain lead on vertical edge
+			return [[16,2], [16,4]]

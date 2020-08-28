@@ -55,6 +55,7 @@ class Source(Lead):
 	def __init__(self, coordinates):
 		"""inherits from the Lead class""" 
 		super().__init__(coordinates)
+		self.type = 'source'
 
 	def plot(self):
 		"""plot the source lead in matplotlib""" 
@@ -82,6 +83,7 @@ class Drain(Lead):
 	def __init__(self, coordinates): 
 		"""inherits from the Lead class""" 
 		super().__init__(coordinates)
+		self.type = 'drain'
 
 	def plot(self): 
 		"""plot the drain lead in matplotlib""" 
@@ -101,6 +103,7 @@ class Thermometer(Lead):
 		"""inherits from the Lead class""" 
 		super().__init__(coordinates)
 		self.emissivity = emissivity
+		self.type = 'thermometer'
 
 	def plot(self):
 		"""plot the drain lead in matplotlib""" 

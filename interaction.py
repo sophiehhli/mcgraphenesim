@@ -46,6 +46,27 @@ def point_intersection(point, boundary):
 		print('direction: ' + str(point.direction))
 	return [multipoint.x, multipoint.y]
 
+def closest_intersection(point, line_intersect, polygon): 
+	shortest_dist = (line_intersect[0][1][0]-point.x0)**2+(line_intersect[0][1][1]-point.y0)**2
+	closest_intersection = line_intersect[0]
+	for line in line_intersect: 
+		distance = (line[1][0]-point.x0)**2+(line[1][1]-point.y0)**2
+		if distance < shortest_dist: 
+			shortest_dist = distance 
+			closest_intersection = line
+	return closest_intersection
+
+def polygon_intersection(point, polygon): 
+	line_string_coord = point.line_coordinates()
+	trajectory = LineString(line_string_coord)
+	line_intersect = []
+	for i in range(len(polygon.construct_lines)): 
+		intersection = trajectory.intersection(polygon.construct_lines[i])
+		if isinstance(intersection, shapely.geometry.Point) == True: 
+			line_intersect.append([polygon.construct_lines[i], [intersection.x, intersection.y]])
+	correct_intersection = closest_intersection(point, line_intersect, polygon)
+	return correct_intersection
+
 def specular_reflection(particle, n, intersection):
 	"""collision with boundary, specular
 	returns Particle type with new direction, position at intersection"""
@@ -88,9 +109,19 @@ def boundary_response(f, particle, boundary):
 	intersection = Intersection(point_intersection(particle, boundary))
 	normal =  intersection.normal(boundary)
 	if np.random.random() < f: 
-		normal =  intersection.normal(boundary)
 		return diffuse_reflection(normal, intersection)
 	else:
+		return specular_reflection(particle, normal, intersection)
+
+def polygon_boundary_response(f, particle, polygon, contacts): 
+	line, intersection = polygon_intersection(particle, polygon)
+	intersection = Intersection(intersection)
+	normal = -polygon.grad(line.coords)
+	if np.random.random() < f: 
+		#print('diffusly relflected')
+		return diffuse_reflection(normal, intersection)
+	else: 
+		#print('specularly scattered')
 		return specular_reflection(particle, normal, intersection)
 
 
