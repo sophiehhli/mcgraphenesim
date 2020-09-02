@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.stats import cosine 
 import matplotlib.pyplot as plt
-import boundary
 dx = 0.0000000000001
 linelength = 2000
 
@@ -24,3 +23,17 @@ class Particle():
 		end_coord = self.pos + expanded_dir
 		line = [(start_coord[0], start_coord[1]), (end_coord[0], end_coord[1])]
 		return line
+
+	def diffuse_reflection(): 
+		
+
+class Phonon(Particle): 
+	def __init__(self, x, y, direction): 
+		"""inherits from the Particle class""" 
+		super().__init__(x, y, direction)
+
+class Electron(Particle):
+	def __init__(self, x, y, direction, k_vector):
+		"""inherits from the Particle class""" 
+		super().__init__(x, y, direction)
+		self.k_vector = k_vector

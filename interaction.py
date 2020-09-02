@@ -64,8 +64,6 @@ def polygon_intersection(point, polygon):
 		intersection = trajectory.intersection(polygon.construct_lines[i])
 		if isinstance(intersection, shapely.geometry.Point) == True: 
 			line_intersect.append([polygon.construct_lines[i], [intersection.x, intersection.y]])
-			print('added!')
-			print(intersection)
 	correct_intersection = closest_intersection(point, line_intersect, polygon)
 	return correct_intersection
 
@@ -120,17 +118,9 @@ def polygon_boundary_response(f, particle, polygon, contacts):
 	intersection = Intersection(intersection)
 	normal = -1*polygon.grad(list(line.coords))
 	if np.random.random() < f: 
-		print('diffusly relflected')
-		print('line = '+str(list(line.coords)))
-		print('normal = ' +str(normal))
-		print('particle = ' + str(particle.coordinates))
 		return diffuse_reflection(normal, intersection)
 	else: 
-		print('specularly scattered')
-		print('line = '+str(list(line.coords)))
-		print('normal = ' +str(normal))
 		return specular_reflection(particle, normal, intersection)
-
 
 def plot_trajectory(inital_point, new_point):
 	"""add line connecting interaction points with line"""
