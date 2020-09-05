@@ -2,10 +2,10 @@ import boundary
 import point
 import interaction
 import contact
-import plotfunc
 import time 
 import loops
 import fermicircle
+from analyze import *
 
 import numpy as np
 import matplotlib
@@ -77,7 +77,7 @@ for f in range(len(f_list)):
 		released += 1 # add to counter of number of phonons 
 		bar.next()
 
-	print('\n Transmitted: '+ str(plotfunc.transmitted_precent(drain.n_collisions, source.n_collisions))) #print transmission rate
+	print('\n Transmitted: '+ str(calculate.transmitted_precent(drain.n_collisions, source.n_collisions))) #print transmission rate
 	
 	# caluclate mfp and append the inverse to the array for current f value 
 	#mfp = plotfunc.mean_free_path(drain, source, th2, th1, bound)

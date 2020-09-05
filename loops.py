@@ -2,7 +2,7 @@ import boundary
 import point
 import interaction
 import contact
-import plotfunc
+import analyze
 import time 
 
 import numpy as np
