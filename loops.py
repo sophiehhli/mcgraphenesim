@@ -10,7 +10,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import datetime
 
-def phonon_loop(end, curphonon, f, bound, contacts): 
+def phonon_loop(end, curphonon, f, bound, contacts, specie): 
 	for c in contacts: 
 		if c.check_intersection(curphonon): 
 			newphonon = c.response(curphonon)

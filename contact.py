@@ -68,14 +68,14 @@ class Source(Lead):
 		direcion is unchanged because the particle will be absorbed by source"""
 		self.n_collisions += 1 
 		intersection = self.get_intersection(particle)
-		return point.Particle(intersection.x, intersection.y)
+		return point.Particle([intersection.x, intersection.y])
 
 	def alternate_response(self, particle, f): 
 		"""alternate response that acts like thermometer
 		not called in code""" 
 		intersection = self.get_intersection(particle)
 		if np.random.random() < f:
-			return interaction.diffuse_reflection(self.normal, intersection)
+			return interaction.diffuse_reflection(particle.specie, self.normal, intersection)
 		else:
 			return interaction.specular_reflection(particle, self.normal, intersection)
 
@@ -96,7 +96,7 @@ class Drain(Lead):
 		direcion is unchanged because the particle will be absorbed by drain"""
 		self.n_collisions += 1
 		intersection = self.get_intersection(particle)
-		return point.Particle(intersection.x, intersection.y)
+		return point.Particle([intersection.x, intersection.y])
 
 class Thermometer(Lead): 
 	def __init__(self, coordinates, emissivity = 0.4):
@@ -117,7 +117,7 @@ class Thermometer(Lead):
 		if self.emissivity >= np.random.random():
 			"""diffusivly scattered from a random point on the thermometer""" 
 			intersection = self.get_intersection(particle)
-			middle_particle = point.Particle(intersection.x, intersection.y)
+			middle_particle = point.Particle([intersection.x, intersection.y])
 			#uncomment line below to plot the trajectory of the particle
 			#interaction.plot_trajectory(particle, middle_particle)
 			newphoton = interaction.contact_emmision(self)

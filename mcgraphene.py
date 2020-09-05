@@ -5,6 +5,7 @@ import contact
 import plotfunc
 import time 
 import loops
+import fermicircle
 
 import numpy as np
 import matplotlib
@@ -32,9 +33,17 @@ drain = contact.Drain(bound.lead_coordinates('v2'))
 contacts = [source, drain]#, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
-f_list = [1] # f denotes probability of diffuse scattering 
+f_list = [0] # f denotes probability of diffuse scattering 
 n_phonon = 1 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
+specie = 'phonon'
+e_fermi = 10
+n_k_vec = 8 #must be even
+d_kx = 1
+
+sample = fermicircle.gen_sample(e_fermi, n_k_vec)
+centered_fermi_circle = fermicircle.Fermi_circle(sample)
+shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx))
 
 """lists that will be added to in the course of the simulation""" 
 emission_points= [] #array of interaction points at the boundary 
@@ -53,15 +62,16 @@ for f in range(len(f_list)):
 	bar = IncrementalBar('Progress f = '+str(f_list[f]), max = n_phonon)
 	while released <= n_phonon:
 		"""loop until the specifed number of phonons has been released"""
-		curphonon = interaction.contact_emmision(source)
-		fintersections.append(curphonon.coordinates)
+		curphonon = interaction.contact_emmision(source, specie)
+		curphonon.specie = specie
+		fintersections.append(curphonon.coords)
 
 		while True:
 			"""loop through until phonon collides with source or drain"""
 			end = False
-			end, newphonon = loops.polygon_loop(end, curphonon, f_list[f], bound, contacts)
+			end, newphonon = loops.polygon_loop(end, curphonon, f_list[f], bound, contacts) 
 			if end: break # this phoonon has be absorbed by drain or source lead
-			fintersections.append(newphonon.coordinates) #add the new phonon coordinates to the intersection points
+			fintersections.append(newphonon.coords) #add the new phonon coordinates to the intersection points
 			curphonon = newphonon
 		
 		released += 1 # add to counter of number of phonons 
