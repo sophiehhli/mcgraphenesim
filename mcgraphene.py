@@ -17,7 +17,7 @@ from progress.bar import IncrementalBar
 #plotfunc.plot_inverse_mfp_from_file('data/inverse_mfp/aug_11_inverse_mfp.dat')
 #plotfunc.plot_mfp_from_file('data/inverse_mfp/aug_11_inverse_mfp.dat')
 
-"""choose circular or rectangular boundary by creating instance from class""" 
+"""choose boundary by creating instance from class""" 
 #bound = boundary.Circle(0,0,1,1,10)
 #bound = boundary.Rectangle(length = 10, width = 1)
 vertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(16,4),(16,2),(14,2),(14,0),(12,0),(12,2)]
@@ -84,13 +84,13 @@ for f in range(len(f_list)):
 	#inverse_mfp.append(1/mfp)
 	
 	for c in contacts: c.n_collisions = 0 #reset the collision count for the leads 
-	#plotfunc.save_interactions(fintersections, bound, f_list[f], therm_len, n_phonon)
 	emission_points.append(fintersections) #add array of intersection to the nested array 
 
 # end timer for the loop 
 bar.finish()
 toc = time.perf_counter()
 print(f"Executed loop in {toc - tic:0.4f} seconds")
+visual.show_trajectory(emission_points[0])
 plt.show()
 #plotfunc.histogram_plot_cart(emission_points, n_phonon, binwidth, source, drain, f_list, bound)
 #plotfunc.save_inverse_mfp_data(f_list, inverse_mfp, "aug_11_inverse_mfp")

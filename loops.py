@@ -19,7 +19,7 @@ def phonon_loop(end, curphonon, f, bound, contacts, specie):
 			else: 
 				return [False, newphonon]
 	newphonon = interaction.polygon_boundary_response(f_list[f], curphonon, bound, contacts)
-	interaction.plot_trajectory(curphonon, newphonon)
+	#interaction.plot_trajectory(curphonon, newphonon)
 	return [False, newphonon]
 
 def polygon_loop(end, curphonon, f, bound, contacts): 
@@ -32,5 +32,5 @@ def polygon_loop(end, curphonon, f, bound, contacts):
 			interaction.plot_trajectory(curphonon, newphonon)
 			return [True, newphonon]
 	newphonon = interaction.polygon_boundary_response(f, curphonon, bound, contacts)
-	interaction.plot_trajectory(curphonon, newphonon)
+	#interaction.plot_trajectory(curphonon, newphonon)
 	return [False, newphonon]
