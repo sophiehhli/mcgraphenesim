@@ -33,7 +33,7 @@ drain = contact.Drain(bound.lead_coordinates('v2'))
 contacts = [source, drain]#, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
-f_list = [0] # f denotes probability of diffuse scattering 
+f_list = [0.5] # f denotes probability of diffuse scattering 
 n_phonon = 1 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'phonon'
@@ -49,7 +49,6 @@ shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx
 emission_points= [] #array of interaction points at the boundary 
 inverse_mfp = [] #array of the inverse mfp
 
-#plotfunc.show_boundary(bound,contacts)
 bound.plot()
 # start timer for loop 
 tic = time.perf_counter()
@@ -62,18 +61,15 @@ for f in range(len(f_list)):
 	bar = IncrementalBar('Progress f = '+str(f_list[f]), max = n_phonon)
 	while released <= n_phonon:
 		"""loop until the specifed number of phonons has been released"""
-		curphonon = interaction.contact_emmision(source, specie)
-		curphonon.specie = specie
-		fintersections.append(curphonon.coords)
+		particle = interaction.intialize_particle(source, specie)
+		fintersections.append(particle.coords)
 
 		while True:
 			"""loop through until phonon collides with source or drain"""
 			end = False
-			end, newphonon = loops.polygon_loop(end, curphonon, f_list[f], bound, contacts) 
-			if end: break # this phoonon has be absorbed by drain or source lead
-			fintersections.append(newphonon.coords) #add the new phonon coordinates to the intersection points
-			curphonon = newphonon
-		
+			end = loops.polygon_loop(end, particle, f_list[f], bound, contacts) 
+			fintersections.append(particle.coords) #add the new phonon coordinates to the intersection points
+			if end: break
 		released += 1 # add to counter of number of phonons 
 		bar.next()
 

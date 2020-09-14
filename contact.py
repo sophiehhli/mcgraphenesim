@@ -68,16 +68,17 @@ class Source(Lead):
 		direcion is unchanged because the particle will be absorbed by source"""
 		self.n_collisions += 1 
 		intersection = self.get_intersection(particle)
-		return point.Particle([intersection.x, intersection.y])
+		particle.coords = [intersection.x, intersection.y]
+		#return point.Particle([intersection.x, intersection.y])
 
 	def alternate_response(self, particle, f): 
 		"""alternate response that acts like thermometer
 		not called in code""" 
 		intersection = self.get_intersection(particle)
 		if np.random.random() < f:
-			return interaction.diffuse_reflection(particle.specie, self.normal, intersection)
+			interaction.diffuse_reflection(particle.specie, self.normal, intersection)
 		else:
-			return interaction.specular_reflection(particle, self.normal, intersection)
+			interaction.specular_reflection(particle, self.normal, intersection)
 
 class Drain(Lead): 
 	def __init__(self, coordinates): 
@@ -96,7 +97,8 @@ class Drain(Lead):
 		direcion is unchanged because the particle will be absorbed by drain"""
 		self.n_collisions += 1
 		intersection = self.get_intersection(particle)
-		return point.Particle([intersection.x, intersection.y])
+		particle.coords = [intersection.x, intersection.y]
+		#return point.Particle([intersection.x, intersection.y])
 
 class Thermometer(Lead): 
 	def __init__(self, coordinates, emissivity = 0.4):
@@ -125,7 +127,7 @@ class Thermometer(Lead):
 		else: 
 			"""specularly scattered from the point of intersection"""
 			intersection = self.get_intersection(particle)
-			return interaction.specular_reflection(particle, self.normal, intersection)
+			interaction.specular_reflection(particle, self.normal, intersection)
 
 	def t_norm(self, heater): 
 		"""returns the normalised temperature averaged over the whole thermometer""" 
