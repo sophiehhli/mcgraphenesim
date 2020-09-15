@@ -28,12 +28,12 @@ def point_intersection(point, boundary):
 		print('direction: ' + str(point.direction))
 	return [multipoint.x, multipoint.y]
 
-def closest_intersection(point, line_intersect, polygon): 
+def closest_intersection(point, line_intersect): 
 	distances = []
 	for line in line_intersect: 
-		distances.append((line[1][0]-point.x)**2+(line[1][1]-point.y)**2)
+		distances.append((line[1][0]-point.coords[0])**2+(line[1][1]-point.coords[1])**2)
 	index_min = np.argmin(distances)
-	print(distances)
+	line_intersect = np.array(line_intersect)
 	return line_intersect[index_min]
 
 def polygon_intersection(point, polygon): 
@@ -44,8 +44,8 @@ def polygon_intersection(point, polygon):
 		intersection = trajectory.intersection(polygon.construct_lines[i])
 		if isinstance(intersection, shapely.geometry.Point) == True: 
 			line_intersect.append([polygon.construct_lines[i], [intersection.x, intersection.y]])
-	correct_intersection = closest_intersection(point, line_intersect, polygon)
-	print("chosen: "+str(correct_intersection[1]))
+	correct_intersection = closest_intersection(point, line_intersect)
+	#print("chosen: "+str(correct_intersection[1]))
 	return correct_intersection
 
 def specular_reflection(particle, n, intersection):

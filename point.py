@@ -12,8 +12,6 @@ class Particle():
 	"""particle type with attributes of postition and direction"""
 	def __init__(self, coords, direction = def_dir, specie= 'phonon'):
 		self.coords = coords
-		self.x = coords[0]
-		self.y = coords[1]
 		#self.fermi_cicle = fermi_circle
 		self.direction = direction
 		self.specie = specie

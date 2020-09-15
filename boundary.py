@@ -243,6 +243,8 @@ class Polygon():
 		if kind == 'i+':
 			# source lead on the vertical edge 
 			return [[0,4],[0,2]]
+		if kind == 'i-': 
+			return [[4,6], [2,6]]
 		if kind == 'v2': 
 			# drain lead on vertical edge
 			return [[16,2], [16,4]]
