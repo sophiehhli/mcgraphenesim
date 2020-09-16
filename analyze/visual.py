@@ -6,7 +6,6 @@ import datetime
 def show_boundary(bound, contacts): 
 	bound.plot()
 	for c in contacts: c.plot()
-	plt.show()
 
 def show_trajectory(points): 
 	for i in range(len(points) - 1): 

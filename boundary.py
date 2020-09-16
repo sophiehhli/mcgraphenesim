@@ -246,5 +246,6 @@ class Polygon():
 		if kind == 'i-': 
 			return [[4,6], [2,6]]
 		if kind == 'v2': 
-			# drain lead on vertical edge
 			return [[16,2], [16,4]]
+		if kind == 'v1': 
+			return [[12,0], [14,0]]

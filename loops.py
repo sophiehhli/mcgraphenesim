@@ -18,7 +18,7 @@ def phonon_loop(end, curphonon, f, bound, contacts, specie):
 				return True
 			else: 
 				return False
-	newphonon = interaction.polygon_boundary_response(f_list[f], curphonon, bound, contacts)
+	interaction.polygon_boundary_response(f_list[f], curphonon, bound, contacts)
 	#interaction.plot_trajectory(curphonon, newphonon)
 	return False
 
@@ -28,9 +28,14 @@ def polygon_loop(end, particle, f, bound, contacts):
 	line = list(map(list,line))
 	for c in contacts: 
 		if line == c.coordinates: 
+			print("coords from polygon contacts loop: " + str(particle.coords))
 			c.response(particle)
 			#interaction.plot_trajectory(curphonon, newphonon)
-			return True
+			if c.type in ['source','drain']: 
+				return True
+			else:
+				print("thermometer return false")
+				return False
 	interaction.polygon_boundary_response(f, particle, bound, contacts)
 	#interaction.plot_trajectorys(curphonon, newphonon)
 	return False

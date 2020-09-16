@@ -69,7 +69,6 @@ class Source(Lead):
 		self.n_collisions += 1 
 		intersection = self.get_intersection(particle)
 		particle.coords = [intersection.x, intersection.y]
-		#return point.Particle([intersection.x, intersection.y])
 
 	def alternate_response(self, particle, f): 
 		"""alternate response that acts like thermometer
@@ -98,7 +97,6 @@ class Drain(Lead):
 		self.n_collisions += 1
 		intersection = self.get_intersection(particle)
 		particle.coords = [intersection.x, intersection.y]
-		#return point.Particle([intersection.x, intersection.y])
 
 class Thermometer(Lead): 
 	def __init__(self, coordinates, emissivity = 0.4):
@@ -113,20 +111,25 @@ class Thermometer(Lead):
 		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='green')
 
 	def response(self, particle): 
+		print("thermometer response")
 		"""used if collision with thermometer
 		output: new particle, either specularly or diffusivly scattered""" 
 		self.n_collisions += 1 
 		if self.emissivity >= np.random.random():
+			print("contact_emmision")
 			"""diffusivly scattered from a random point on the thermometer""" 
-			intersection = self.get_intersection(particle)
-			middle_particle = point.Particle([intersection.x, intersection.y])
+			#initial_intersection = self.get_intersection(particle)
+			#middle_particle = point.Particle([intersection.x, intersection.y])
 			#uncomment line below to plot the trajectory of the particle
 			#interaction.plot_trajectory(particle, middle_particle)
-			newphoton = interaction.contact_emmision(self)
-			return newphoton
+			interaction.contact_emmision(self, particle)
 		else: 
 			"""specularly scattered from the point of intersection"""
-			intersection = self.get_intersection(particle)
+			print("specular thermometer")
+			intersection_point = self.get_intersection(particle)
+			print("intersection coords: " + str(intersection_point))
+			intersection = point.Particle([intersection_point.x, intersection_point.y])
+			print("intersection after conversion: " + str(intersection))
 			interaction.specular_reflection(particle, self.normal, intersection)
 
 	def t_norm(self, heater): 

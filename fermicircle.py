@@ -7,20 +7,21 @@ def gen_sample(e_fermi, N):
 	return all_vectors
 
 class Fermi_circle():
-	def __init__(self, sample): 
+	def __init__(self, sample, e_fermi): 
 		self.sample = sample
 		self.n = len(sample)
+		self.e_fermi = e_fermi
 
 	def shift(self, d_kx):
 		add = np.zeros((self.n, 2))
 		add[:,0] = d_kx
 		return self.sample + add
 
-	def pick_vector(fermi_circle): 
-		return np.random.choice(fermi_circle)
+	def pick_vector_index(self): 
+		return np.random.randint(0,len(self.sample))
 
-	def reflect_vector(self, i): 
+	def reflect(self, i): 
 		self.sample[i] = -self.sample[i]
 
 	def randomize(self, i): 
-		self.sample[i] = e_fermi * np.random.sample[2]
+		self.sample[i] = self.e_fermi * np.random.sample(2)

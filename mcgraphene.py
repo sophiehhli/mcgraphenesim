@@ -27,29 +27,32 @@ bound = boundary.Polygon(vertices)
 """create instance of the leads to include in the simulation""" 
 #therm_len = '0'
 source = contact.Source(bound.lead_coordinates('i+'))
-drain = contact.Drain(bound.lead_coordinates('v2'))
+drain = contact.Drain(bound.lead_coordinates('i-'))
+v1 = contact.Thermometer(bound.lead_coordinates('v1'))
+v2 = contact.Thermometer(bound.lead_coordinates('v2'))
+print("v1 emmisvity: " + str(v1.emissivity))
 #th1 = contact.Thermometer(bound.lead_coordinates(therm_len+'t1'))
 #th2 = contact.Thermometer(bound.lead_coordinates(therm_len+'t2'))
-contacts = [source, drain]#, th1, th2] #save in list for easier access
+contacts = [source, drain, v1, v2]#, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
 f_list = [0.5] # f denotes probability of diffuse scattering 
 n_phonon = 1 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
-specie = 'phonon'
+specie = 'electron'
 e_fermi = 10
 n_k_vec = 8 #must be even
 d_kx = 1
 
 sample = fermicircle.gen_sample(e_fermi, n_k_vec)
-centered_fermi_circle = fermicircle.Fermi_circle(sample)
-shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx))
+centered_fermi_circle = fermicircle.Fermi_circle(sample, e_fermi)
+shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx), e_fermi)
 
 """lists that will be added to in the course of the simulation""" 
 emission_points= [] #array of interaction points at the boundary 
 inverse_mfp = [] #array of the inverse mfp
 
-bound.plot()
+visual.show_boundary(bound, contacts)
 # start timer for loop 
 tic = time.perf_counter()
 print("timer started at: "+ str(datetime.datetime.now()))
@@ -61,7 +64,7 @@ for f in range(len(f_list)):
 	bar = IncrementalBar('Progress f = '+str(f_list[f]), max = n_phonon)
 	while released <= n_phonon:
 		"""loop until the specifed number of phonons has been released"""
-		particle = interaction.intialize_particle(source, specie)
+		particle = interaction.intialize_particle(source, specie, shifted_fermi_circle)
 		fintersections.append(particle.coords)
 
 		while True:
