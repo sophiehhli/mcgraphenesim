@@ -12,17 +12,13 @@ class Particle():
 		self.coords = coords
 		#self.fermi_cicle = fermi_circle
 		self.direction = direction
+		self.intermediate_point = 'empty'
 
 	def line_coordinates(self): 
 		"""beginning and end of trajectory in a dir"""
 		start_coord = self.coords + dx * self.direction/np.linalg.norm(self.direction)
-		print("---------------------")
-		print(start_coord)
 		expanded_dir = linelength * self.direction
 		end_coord = self.coords + expanded_dir
-		print(end_coord)
-		print("direction: "+ str(self.direction))
-		print("coords: "+str(self.coords))
 		line = [(start_coord[0], start_coord[1]), (end_coord[0], end_coord[1])]
 		return line
 

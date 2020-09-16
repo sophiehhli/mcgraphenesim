@@ -28,7 +28,6 @@ def polygon_loop(end, particle, f, bound, contacts):
 	line = list(map(list,line))
 	for c in contacts: 
 		if line == c.coordinates: 
-			print("coords from polygon contacts loop: " + str(particle.coords))
 			c.response(particle)
 			#interaction.plot_trajectory(curphonon, newphonon)
 			if c.type in ['source','drain']: 

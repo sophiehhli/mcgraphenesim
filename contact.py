@@ -122,14 +122,13 @@ class Thermometer(Lead):
 			#middle_particle = point.Particle([intersection.x, intersection.y])
 			#uncomment line below to plot the trajectory of the particle
 			#interaction.plot_trajectory(particle, middle_particle)
+			initial_intersection = self.get_intersection(particle)
+			particle.intermediate_point = [initial_intersection.x, initial_intersection.y]
 			interaction.contact_emmision(self, particle)
 		else: 
 			"""specularly scattered from the point of intersection"""
-			print("specular thermometer")
 			intersection_point = self.get_intersection(particle)
-			print("intersection coords: " + str(intersection_point))
 			intersection = point.Particle([intersection_point.x, intersection_point.y])
-			print("intersection after conversion: " + str(intersection))
 			interaction.specular_reflection(particle, self.normal, intersection)
 
 	def t_norm(self, heater): 
