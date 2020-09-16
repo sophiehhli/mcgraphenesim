@@ -62,13 +62,12 @@ class Source(Lead):
 		xandy = sep_xy(self.start, self.end)
 		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='blue')
 
-	def response(self, particle): 
+	def response(self, particle, intersection): 
 		"""used if check_intersection returns true.
 		output: new particle with position at intersection point,
 		direcion is unchanged because the particle will be absorbed by source"""
-		self.n_collisions += 1 
-		intersection = self.get_intersection(particle)
-		particle.coords = [intersection.x, intersection.y]
+		self.n_collisions += 1
+		particle.coords = intersection
 
 	def alternate_response(self, particle, f): 
 		"""alternate response that acts like thermometer
@@ -90,13 +89,12 @@ class Drain(Lead):
 		xandy = sep_xy(self.start, self.end)
 		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='red')
 
-	def response(self, particle): 
+	def response(self, particle, intersection): 
 		"""used if check_intersection returns true.
 		output: new particle with position at intersection point,
 		direcion is unchanged because the particle will be absorbed by drain"""
 		self.n_collisions += 1
-		intersection = self.get_intersection(particle)
-		particle.coords = [intersection.x, intersection.y]
+		particle.coords = intersection
 
 class Thermometer(Lead): 
 	def __init__(self, coordinates, emissivity = 0.4):
@@ -110,25 +108,17 @@ class Thermometer(Lead):
 		xandy = sep_xy(self.start, self.end)
 		plt.plot(xandy[0], xandy[1], 'k-', lw=1, color='green')
 
-	def response(self, particle): 
-		print("thermometer response")
+	def response(self, particle, initial_intersection): 
 		"""used if collision with thermometer
 		output: new particle, either specularly or diffusivly scattered""" 
 		self.n_collisions += 1 
 		if self.emissivity >= np.random.random():
-			print("contact_emmision")
 			"""diffusivly scattered from a random point on the thermometer""" 
-			#initial_intersection = self.get_intersection(particle)
-			#middle_particle = point.Particle([intersection.x, intersection.y])
-			#uncomment line below to plot the trajectory of the particle
-			#interaction.plot_trajectory(particle, middle_particle)
-			initial_intersection = self.get_intersection(particle)
-			particle.intermediate_point = [initial_intersection.x, initial_intersection.y]
+			particle.intermediate_point = initial_intersection
 			interaction.contact_emmision(self, particle)
 		else: 
 			"""specularly scattered from the point of intersection"""
-			intersection_point = self.get_intersection(particle)
-			intersection = point.Particle([intersection_point.x, intersection_point.y])
+			intersection = point.Particle(initial_intersection)
 			interaction.specular_reflection(particle, self.normal, intersection)
 
 	def t_norm(self, heater): 

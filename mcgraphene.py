@@ -30,53 +30,61 @@ source = contact.Source(bound.lead_coordinates('i+'))
 drain = contact.Drain(bound.lead_coordinates('i-'))
 v1 = contact.Thermometer(bound.lead_coordinates('v1'))
 v2 = contact.Thermometer(bound.lead_coordinates('v2'))
-print("v1 emmisvity: " + str(v1.emissivity))
 #th1 = contact.Thermometer(bound.lead_coordinates(therm_len+'t1'))
 #th2 = contact.Thermometer(bound.lead_coordinates(therm_len+'t2'))
 contacts = [source, drain, v1, v2]#, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
-f_list = [0] # f denotes probability of diffuse scattering 
-n_phonon = 1 # number of phonons to be released by the source
+f_list = [1] # f denotes probability of diffuse scattering 
+n_particle = 1000 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'electron'
 e_fermi = 10
-n_k_vec = 8 #must be even
+n_k_vec = n_particle #must be even
 d_kx = 1
 
 sample = fermicircle.gen_sample(e_fermi, n_k_vec)
-centered_fermi_circle = fermicircle.Fermi_circle(sample, e_fermi)
-shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx), e_fermi)
+centered_fermi_circle = fermicircle.Fermi_circle(sample, e_fermi, "Centered")
+shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx), e_fermi, "Shifted")
+unchanged_shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx), e_fermi, "Shifted, Unchanged")
+
+visual.show_fermi_circles([centered_fermi_circle, shifted_fermi_circle])
 
 """lists that will be added to in the course of the simulation""" 
 emission_points = [] #array of interaction points at the boundary 
-trajectory_plot_points = []
+trajectories = []
 inverse_mfp = [] #array of the inverse mfp
 
-visual.show_boundary(bound, contacts)
+#visual.show_boundary(bound, contacts)
+#plt.show()
 # start timer for loop 
 tic = time.perf_counter()
 print("timer started at: "+ str(datetime.datetime.now()))
 # main simuation loop 
 
 for f in range(len(f_list)): 
-	released = 1 #counter for the number of phonons released 
+	released = 0 #counter for the number of phonons released 
 	f_emissions = [] #list of the intersection for the f 
-	f_trajectory_plotting = []
-	bar = IncrementalBar('Progress f = '+str(f_list[f]), max = n_phonon)
-	while released <= n_phonon:
+	f_trajectories = []
+	bar = IncrementalBar('Progress f = '+str(f_list[f]), max = n_particle)
+	while released < n_particle:
 		"""loop until the specifed number of phonons has been released"""
-		particle = interaction.intialize_particle(source, specie, shifted_fermi_circle)
+		trajectory = []
+		particle = interaction.intialize_particle(source, specie, released, shifted_fermi_circle)
 		f_emissions.append(particle.coords)
-		f_trajectory_plotting.append([False, particle.coords])
+		trajectory.append([False, particle.coords])
 		while True:
 			"""loop through until phonon collides with source or drain"""
 			end = False
 			end = loops.polygon_loop(end, particle, f_list[f], bound, contacts)
-			visual.update_trajectories(particle, f_trajectory_plotting)
+			visual.update_trajectory(particle, trajectory)
 			f_emissions.append(particle.coords) #add the new phonon coordinates to the intersection points
 			if end: break
 		released += 1 # add to counter of number of phonons 
+		#visual.show_boundary(bound, contacts)
+		#visual.show_trajectory(trajectory)
+		plt.show()
+		f_trajectories.append(trajectory)
 		bar.next()
 
 	print('\n Transmitted: '+ str(calculate.transmitted_precent(drain.n_collisions, source.n_collisions))) #print transmission rate
@@ -86,14 +94,17 @@ for f in range(len(f_list)):
 	#inverse_mfp.append(1/mfp)
 	
 	for c in contacts: c.n_collisions = 0 #reset the collision count for the leads 
-	trajectory_plot_points.append(f_trajectory_plotting)
+	trajectories.append(f_trajectories)
 	emission_points.append(f_emissions) #add array of intersection to the nested array 
 
 # end timer for the loop 
 bar.finish()
 toc = time.perf_counter()
 print(f"Executed loop in {toc - tic:0.4f} seconds")
-visual.show_alternate_trajectory(trajectory_plot_points[0])
+
+visual.show_fermi_circles([centered_fermi_circle, shifted_fermi_circle, unchanged_shifted_fermi_circle])
 plt.show()
+
+
 #plotfunc.histogram_plot_cart(emission_points, n_phonon, binwidth, source, drain, f_list, bound)
 #plotfunc.save_inverse_mfp_data(f_list, inverse_mfp, "aug_11_inverse_mfp")
