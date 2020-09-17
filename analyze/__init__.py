@@ -1,1 +1,1 @@
-__all__ = ["calculate", "mfp", "t_profiles", "visual"]
+__all__ = ["calculate", "mfp", "t_profiles", "visual", "analyze_fermicircle"]

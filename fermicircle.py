@@ -30,25 +30,7 @@ class Fermi_circle():
 		angle = 2 * np.pi * np.random.random_sample()
 		self.sample[i] = self.e_fermi * np.array([np.cos(angle), np.sin(angle)])
 
-	def visualize(self, color): 
-		x,y = np.transpose(self.sample)
-		fig, ax = plt.subplots()
-		ax.set_aspect(1)
-		plt.grid(linestyle='--') 
-		plt.scatter(x, y, s = 1, color=color)
-		'''for vector in self.sample:
-			print(vector)
-			plt.plot(vector, color=color)'''
-	def compare_to(self, other):
-		handles = [self.name, other.name]
-		x,y = np.transpose(self.sample)
-		x1,y1 = np.transpose(other.sample)
-		fig, ax = plt.subplots()
-		ax.set_aspect(1)
-		plt.grid(linestyle='--') 
-		plt.scatter(x, y, s = 1, color='black', label = self.name)
-		plt.scatter(x1, y1, s = 1, color='red', label = other.name)
-		plt.xlabel(r'$k_x$')
-		plt.ylabel(r'$k_y$')
-		plt.legend(handles=handles)
-		plt.show()
+	def center(self): 
+		x_mean = np.mean(np.array(self.sample)[:,0])
+		y_mean = np.mean(np.array(self.sample)[:,1])
+		return [x_mean, y_mean]
