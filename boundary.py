@@ -134,22 +134,22 @@ class Rectangle():
 			return [[3,0], self.lowerleft]
 		elif kind == '5t1': 
 			# 5mm thermometer near drain 
-			return [[136, 0], [131, 0]]
+			return [[131, 0], [136, 0]]
 		elif kind == '5t2': 
 			# 5mm thermometer near source 
-			return [[17, 0], [12, 0]]
+			return [[12, 0], [17, 0]]
 		elif kind == '3t1': 
 			# 3mm thermometer near drain 
-			return [[135, 0], [132, 0]]
+			return [[132, 0], [135, 0]]
 		elif kind == '3t2': 
 			# 3mm thermoemter near source
-			return [[16, 0], [13, 0]]
+			return [[13, 0], [16, 0]]
 		elif kind == '1t1': 
 			# 1mm thermometer near drain 
-			return [[135, 0], [134, 0]]
+			return [[134, 0], [135, 0]]
 		elif kind == '1t2': 
 			# 1mm thermoemter near source
-			return [[14, 0], [13, 0]]
+			return [[13, 0], [14, 0]]
 
 	def plot(self): 
 		"""plots the rectangle in matplotlib""" 

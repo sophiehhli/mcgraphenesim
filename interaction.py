@@ -9,10 +9,10 @@ import numpy as np
 import point 
 import boundary
 
-def point_intersection(point, boundary): 
+def point_intersection(point, boundary, trajectory): 
 	"""use shapely library to calcualte tajectory/boundary intersections""" 
-	line_string_coord = point.line_coordinates()
-	trajectory = LineString(line_string_coord)
+	#line_string_coord = point.line_coordinates()
+	#trajectory = LineString(line_string_coord)
 	multipoint = trajectory.intersection(boundary.reconstructed)
 	"""uses if statements to deal with errors that are resolved""" 
 	if isinstance(multipoint, shapely.geometry.MultiPoint)== True: 
@@ -24,9 +24,8 @@ def point_intersection(point, boundary):
 		return [multipoint.x, multipoint.y]
 	else:
 		print("Could not find the intersection")
-		print('Coordinate: ' + str([point.x, point.y]))
+		print('Coordinate: ' + str(point.coords))
 		print('direction: ' + str(point.direction))
-	return [multipoint.x, multipoint.y]
 
 def closest_intersection(point, line_intersect): 
 	distances = []
@@ -92,11 +91,10 @@ def diffuse_reflection(particle, n, intersection):
 		fermi_circle = particle.fermi_circle
 		fermi_circle.randomize(particle.k_vector_index)
 
-
-def boundary_response(f, particle, boundary):
-	"""used when collusion with boundary is found,
+def boundary_response(f, particle, boundary, trajectory):
+	"""used when collision with boundary is found,
 	either diffusively or specularly scattered"""
-	intersection = Point(point_intersection(particle, boundary))
+	intersection = point.Particle(point_intersection(particle, boundary, trajectory))
 	normal =  intersection.normal(boundary)
 	if np.random.random() < f: 
 		diffuse_reflection(particle, normal, intersection)

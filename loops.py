@@ -10,18 +10,20 @@ import matplotlib
 import matplotlib.pyplot as plt
 import datetime
 
-def phonon_loop(end, curphonon, f, bound, contacts, specie): 
-	for c in contacts: 
-		if c.check_intersection(curphonon): 
-			c.response(curphonon)
+def rectangle_loop(particle, f, bound, contacts): 
+	trajectory = contacts[0].calculate_line(particle)
+	for c in contacts:
+		check, intersection = c.check_intersection(particle, trajectory)
+		if check: 
+			c.response(particle, intersection)
 			if c.type in ['source','drain']:
 				return True
 			else: 
 				return False
-	interaction.polygon_boundary_response(f_list[f], curphonon, bound)
+	interaction.boundary_response(f, particle, bound, trajectory)
 	return False
 
-def polygon_loop(end, particle, f, bound, contacts): 
+def polygon_loop(particle, f, bound, contacts): 
 	line, intersection = interaction.polygon_intersection(particle, bound)
 	line = list(line.coords)
 	line = list(map(list,line))
@@ -34,3 +36,17 @@ def polygon_loop(end, particle, f, bound, contacts):
 				return False
 	interaction.polygon_boundary_response(f, particle, bound, line, intersection)
 	return False
+
+def initialize_f_arrays(f_emissions, f_centers, trajectory, particle, shifted_fermi_circle):
+	f_emissions.append(particle.coords)
+	f_centers.append(shifted_fermi_circle.center())
+	trajectory.append([False, particle.coords])
+
+def update_f_arrays(f_emissions, f_centers, particle, shifted_fermi_circle):
+	f_emissions.append(particle.coords) #add the new phonon coordinates to the intersection points
+	f_centers.append(shifted_fermi_circle.center())
+
+def update_arrays(trajectories, emission_points, centers, f_trajectories, f_emissions, f_centers): 
+	trajectories.append(f_trajectories)
+	emission_points.append(f_emissions) #add array of intersection to the nested array 
+	centers.append(f_centers)

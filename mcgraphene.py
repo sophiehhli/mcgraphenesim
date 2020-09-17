@@ -19,7 +19,7 @@ from progress.bar import IncrementalBar
 
 """choose boundary by creating instance from class""" 
 #bound = boundary.Circle(0,0,1,1,10)
-#bound = boundary.Rectangle(length = 10, width = 1)
+#bound = boundary.Rectangle(length = 150, width = 5)
 vertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(16,4),(16,2),(14,2),(14,0),(12,0),(12,2)]
 vertices.reverse()
 bound = boundary.Polygon(vertices)
@@ -35,8 +35,8 @@ v2 = contact.Thermometer(bound.lead_coordinates('v2'))
 contacts = [source, drain, v1, v2]#, th1, th2] #save in list for easier access
 
 """parameters to be chosen for simualtion""" 
-f_list = [0.03] # f denotes probability of diffuse scattering 
-n_particle = 1000 # number of phonons to be released by the source
+f_list = [0] # f denotes probability of diffuse scattering 
+n_particle = 10 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'electron'
 e_fermi = 10
@@ -50,7 +50,6 @@ unchanged_shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.
 
 original_center = centered_fermi_circle.center()
 
-print(original_center)
 visual.show_fermi_circles([centered_fermi_circle, shifted_fermi_circle])
 
 """lists that will be added to in the course of the simulation""" 
@@ -59,7 +58,6 @@ trajectories = []
 inverse_mfp = [] #array of the inverse mfp
 centers = []
 
-#visual.show_boundary(bound, contacts)
 #plt.show()
 # start timer for loop 
 tic = time.perf_counter()
@@ -76,21 +74,20 @@ for f in range(len(f_list)):
 		"""loop until the specifed number of phonons has been released"""
 		trajectory = []
 		particle = interaction.intialize_particle(source, specie, released, shifted_fermi_circle)
-		f_emissions.append(particle.coords)
-		f_centers.append(shifted_fermi_circle.center())
-		trajectory.append([False, particle.coords])
+		loops.initialize_f_arrays(f_emissions, f_centers, trajectory, particle, shifted_fermi_circle)
 		while True:
 			"""loop through until phonon collides with source or drain"""
 			end = False
-			end = loops.polygon_loop(end, particle, f_list[f], bound, contacts)
+			end = loops.rectangle_loop(particle, f_list[f], bound, contacts)
 			visual.update_trajectory(particle, trajectory)
-			f_emissions.append(particle.coords) #add the new phonon coordinates to the intersection points
-			f_centers.append(shifted_fermi_circle.center())
+			loops.update_f_arrays(f_emissions, f_centers, particle, shifted_fermi_circle)
 			if end: break
 		released += 1 # add to counter of number of phonons 
-		#visual.show_boundary(bound, contacts)
-		#visual.show_trajectory(trajectory)
+		
+		visual.show_boundary(bound, contacts)
+		visual.show_trajectory(trajectory)
 		plt.show()
+		
 		f_trajectories.append(trajectory)
 		bar.next()
 
@@ -100,16 +97,13 @@ for f in range(len(f_list)):
 	#mfp = plotfunc.mean_free_path(drain, source, th2, th1, bound)
 	#inverse_mfp.append(1/mfp)
 	
-	for c in contacts: c.n_collisions = 0 #reset the collision count for the leads 
-	trajectories.append(f_trajectories)
-	emission_points.append(f_emissions) #add array of intersection to the nested array 
-	centers.append(f_centers)
-
+	for c in contacts: c.n_collisions = 0 #reset the collision count for the leads
+	loops.update_arrays(trajectories, emission_points, centers, f_trajectories, f_emissions, f_centers)
+	
 # end timer for the loop 
 bar.finish()
 toc = time.perf_counter()
 print(f"Executed loop in {toc - tic:0.4f} seconds")
-
 visual.show_fermi_circles([centered_fermi_circle, shifted_fermi_circle, unchanged_shifted_fermi_circle])
 plt.show()
 

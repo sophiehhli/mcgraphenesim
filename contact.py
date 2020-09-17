@@ -35,13 +35,18 @@ class Lead():
 		self.n_collisions = 0
 		self.length = np.sqrt((self.start[0]-self.end[0])**2+(self.start[1]-self.end[1])**2)
 
-	def check_intersection(self, particle):
-		"""returns boolean if the the lead intersects with the path of a particle"""
+	def calculate_line(self, particle): 
 		line_string_coord = particle.line_coordinates()
-		trajectory = LineString(line_string_coord)
+		trajectory = LineString(line_string_coord) 
+		return trajectory
+
+	def check_intersection(self, particle, trajectory):
+		"""returns boolean if the the lead intersects with the path of a particle"""
 		intersection = self.line.intersection(trajectory)
 		check = isinstance(intersection, shapely.geometry.Point)
-		return check 
+		if check: 
+			intersection = [intersection.x, intersection.y]
+		return [check, intersection] 
 
 	def get_intersection(self, particle):
 		"""returns intersection between lead and path of particle""" 

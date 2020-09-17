@@ -24,7 +24,7 @@ class Particle():
 
 	def normal(self, boundary):
 		"""calculates inward normal of the boundary at the interseciton point""" 
-		normal = - boundary.grad(self.x, self.y)
+		normal = - boundary.grad(self.coords[0], self.coords[1])
 		return normal
 
 	def tangent(self,boundary): 
