@@ -1,2 +1,2 @@
 # Ignore macOS folder files
-*.DS_Store
+.DS_Store
