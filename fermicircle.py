@@ -24,6 +24,7 @@ class Fermi_circle():
 		return np.random.randint(0,len(self.sample))
 
 	def reflect(self, i): 
+		#print("n = "+str(i)+"reflected")
 		self.sample[i] = -self.sample[i]
 
 	def randomize(self, i): 
