@@ -22,24 +22,30 @@ from progress.bar import IncrementalBar
 #bound = boundary.Rectangle(length = 150, width = 5)
 vertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(64,4),(64,2),(62,2),(62,0),(60,0),(60,2)]
 vertices.reverse()
-bound = boundary.Polygon(vertices)
+shortvertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(16,4),(16,2),(14,2),(14,0),(12,0),(12,2)]
+shortvertices.reverse()
+bound = boundary.Polygon(shortvertices)
 
 """parameters to be chosen for simualtion""" 
 f_list = [0.03] # f denotes probability of diffuse scattering 
-emissivity = 0.5
-n_particle = 1000 # number of phonons to be released by the source
+emissivity = 0.4
+n_particle = 100000 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'electron'
 e_fermi = 10
 n_k_vec = n_particle #must be even
 d_kx = 1
 
+lower = 0
+upper = 16
+nbins = 100
+
 """create instance of the leads to include in the simulation""" 
 #therm_len = '0'
 source = contact.Source(bound.lead_coordinates('i+'))
-drain = contact.Drain(bound.lead_coordinates('v2'))
+drain = contact.Drain(bound.lead_coordinates('i-'))
 v1 = contact.Thermometer(bound.lead_coordinates('v1'), emissivity)
-v2 = contact.Thermometer(bound.lead_coordinates('i-'), emissivity)
+v2 = contact.Thermometer(bound.lead_coordinates('v2'), emissivity)
 #th1 = contact.Thermometer(bound.lead_coordinates(therm_len+'t1'))
 #th2 = contact.Thermometer(bound.lead_coordinates(therm_len+'t2'))
 contacts = [source, drain, v1, v2]#, th1, th2] #save in list for easier access
@@ -121,7 +127,10 @@ print(centered_fermi_circle.center())
 print(shifted_fermi_circle.center())
 print(unchanged_shifted_fermi_circle.center())
 #analyze_fermicircle.plot_deviations_length(original_center, centers[0], emission_points[0], 2, 14)
-analyze_fermicircle.fermi_circles_from_kvectors(original_center, k_vectors[0], emission_points[0], 0, 64, 60)
-
+#for i in [0, 9, 19, 29, 39, 49]: 
+	#analyze_fermicircle.plot_circle_at_point(k_vectors[0], emission_points[0], 0, 64, 50, i)
+#analyze_fermicircle.fermi_circles_from_kvectors(original_center, k_vectors[0], emission_points[0], 0, 64, 50)
+analyze_fermicircle.plot_ratio_on_unshifted(k_vectors[0], emission_points[0], lower, upper, nbins, e_fermi)
+analyze_fermicircle.plot_absolute_on_unshifted(k_vectors[0], emission_points[0], lower, upper, nbins, e_fermi)
 #plotfunc.histogram_plot_cart(emission_points, n_phonon, binwidth, source, drain, f_list, bound)
 #plotfunc.save_inverse_mfp_data(f_list, inverse_mfp, "aug_11_inverse_mfp")

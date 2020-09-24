@@ -246,6 +246,6 @@ class Polygon():
 		if kind == 'i-': 
 			return [[4,6], [2,6]]
 		if kind == 'v2': 
-			return [[64,2], [64,4]]
+			return [[16,2], [16,4]]
 		if kind == 'v1': 
-			return [[60,0], [62,0]]
+			return [[12,0], [14,0]]
