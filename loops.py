@@ -23,8 +23,14 @@ def rectangle_loop(particle, f, bound, contacts):
 	interaction.boundary_response(f, particle, bound, trajectory)
 	return False
 
+def error_escape(line): 
+	if line == 'error': 
+		print('error sequence triggered')
+		return True 
+
 def polygon_loop(particle, f, bound, contacts): 
 	line, intersection = interaction.polygon_intersection(particle, bound)
+	error_escape(line)
 	line = list(line.coords)
 	line = list(map(list,line))
 	for c in contacts: 

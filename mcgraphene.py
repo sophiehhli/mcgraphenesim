@@ -28,7 +28,7 @@ bound = boundary.Polygon(shortvertices)
 
 """parameters to be chosen for simualtion""" 
 f_list = [0.03] # f denotes probability of diffuse scattering 
-emissivity = 0.4
+emissivity = 0.03
 n_particle = 100000 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'electron'
@@ -51,8 +51,8 @@ v2 = contact.Thermometer(bound.lead_coordinates('v2'), emissivity)
 contacts = [source, drain, v1, v2]#, th1, th2] #save in list for easier access
 
 sample = fermicircle.gen_sample(e_fermi, n_k_vec)
-centered_fermi_circle = fermicircle.Fermi_circle(sample, e_fermi, "Centered")
-shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx), e_fermi, "Shifted")
+centered_fermi_circle = fermicircle.Fermi_circle(sample, e_fermi, "Equilibrium")
+shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx), e_fermi, "Non-Equilibrium")
 unchanged_shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.shift(d_kx), e_fermi, "Shifted, Unchanged")
 
 original_center = centered_fermi_circle.center()

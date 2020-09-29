@@ -232,11 +232,12 @@ class Polygon():
 		ax.set_aspect(1)
 		for i in self.xy_sep_lines: 
 			plt.plot(i[0], i[1], color='purple')
-		plt.xlim(self.x_min-5, self.x_max+5) 
-		plt.ylim(self.y_min-5, self.y_max+5)
+		edge = 1
+		plt.xlim(self.x_min-edge, self.x_max+edge) 
+		plt.ylim(self.y_min-edge, self.y_max+edge)
 		plt.grid(linestyle='--')
-		plt.xlabel("x (mm)")
-		plt.ylabel("y (mm)")
+		plt.xlabel("x")
+		plt.ylabel("y")
 
 	def lead_coordinates(self, kind):
 		"""different options for the coordinates of different leads"""
