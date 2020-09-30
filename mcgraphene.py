@@ -29,7 +29,7 @@ bound = boundary.Polygon(shortvertices)
 """parameters to be chosen for simualtion""" 
 f_list = [0.03] # f denotes probability of diffuse scattering 
 emissivity = 0.03
-n_particle = 100000 # number of phonons to be released by the source
+n_particle = 10**5 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'electron'
 e_fermi = 10
@@ -121,11 +121,8 @@ print(f"Executed loop in {toc - tic:0.4f} seconds")
 visual.show_fermi_circles([centered_fermi_circle, unchanged_shifted_fermi_circle, shifted_fermi_circle])
 plt.show()
 
-deviations = analyze_fermicircle.convert_to_deviation(original_center, centers[0])
-#print(deviations)
-print(centered_fermi_circle.center())
-print(shifted_fermi_circle.center())
-print(unchanged_shifted_fermi_circle.center())
+analyze_fermicircle.save_array(k_vectors[0], f_list[0], emissivity, n_particle, 'k_vectors')
+analyze_fermicircle.save_array(f_emissions[0], f_list[0], emissivity, n_particle, 'emissions')
 #analyze_fermicircle.plot_deviations_length(original_center, centers[0], emission_points[0], 2, 14)
 #for i in [0, 9, 19, 29, 39, 49]: 
 	#analyze_fermicircle.plot_circle_at_point(k_vectors[0], emission_points[0], 0, 64, 50, i)

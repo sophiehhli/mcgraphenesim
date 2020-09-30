@@ -149,3 +149,11 @@ def plot_absolute_on_unshifted(k_vectors, emissions, lower, upper, nbins, efermi
 	plt.xlabel("Length from emission")
 	plt.ylabel("k-vectors on the centered fermi circle")
 	plt.show()
+
+def save_array(array, f, e, n_phonon, array_type): 
+	date = str(datetime.date.today())
+	loc = '../data_mcgraphenesim/'+array_type+'/'
+	fstr = '_f'+str(f)+'_'
+	estr = '_e'+str(e)+'_'
+	name = loc+date+fstr+estr+str(n_phonon)+'.dat'
+	np.savetxt(name, array)
