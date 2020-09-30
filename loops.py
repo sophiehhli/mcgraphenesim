@@ -30,7 +30,9 @@ def error_escape(line):
 
 def polygon_loop(particle, f, bound, contacts): 
 	line, intersection = interaction.polygon_intersection(particle, bound)
-	error_escape(line)
+	if line == 'error': 
+		print('error sequence triggered')
+		return True 
 	line = list(line.coords)
 	line = list(map(list,line))
 	for c in contacts: 
