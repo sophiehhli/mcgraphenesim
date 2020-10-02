@@ -24,11 +24,11 @@ vertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(64,4),(64,2),(62,2),(62,0),(60,
 vertices.reverse()
 shortvertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(16,4),(16,2),(14,2),(14,0),(12,0),(12,2)]
 shortvertices.reverse()
-bound = boundary.Polygon(shortvertices)
+bound = boundary.Polygon(vertices)
 
 """parameters to be chosen for simualtion""" 
 f_list = [0.03] # f denotes probability of diffuse scattering 
-emissivity = 0.03
+emissivity = 0.4
 n_particle = 10**5 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'electron'
@@ -44,8 +44,8 @@ nbins = 100
 #therm_len = '0'
 source = contact.Source(bound.lead_coordinates('i+'))
 drain = contact.Drain(bound.lead_coordinates('i-'))
-v1 = contact.Thermometer(bound.lead_coordinates('v1'), emissivity)
-v2 = contact.Thermometer(bound.lead_coordinates('v2'), emissivity)
+v1 = contact.Thermometer(bound.lead_coordinates('lv1'), emissivity)
+v2 = contact.Thermometer(bound.lead_coordinates('lv2'), emissivity)
 #th1 = contact.Thermometer(bound.lead_coordinates(therm_len+'t1'))
 #th2 = contact.Thermometer(bound.lead_coordinates(therm_len+'t2'))
 contacts = [source, drain, v1, v2]#, th1, th2] #save in list for easier access

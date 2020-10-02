@@ -44,7 +44,7 @@ def polygon_intersection(point, polygon):
 		if isinstance(intersection, shapely.geometry.Point) == True: 
 			line_intersect.append([polygon.construct_lines[i], [intersection.x, intersection.y]])
 	if len(line_intersect) == 0: 
-		print('error sequence triggered')
+		print('returning error')
 		return ['error', 'error']
 	correct_intersection = closest_intersection(point, line_intersect)
 	return correct_intersection

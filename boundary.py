@@ -250,3 +250,7 @@ class Polygon():
 			return [[16,2], [16,4]]
 		if kind == 'v1': 
 			return [[12,0], [14,0]]
+		if kind == 'lv2':
+			return [[64,2], [64,4]]
+		if kind == 'lv1': 
+			return [[60,0], [62, 0]]
