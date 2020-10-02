@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import datetime
 import time
 from progress.bar import IncrementalBar
-
+'''
 #plotfunc.plot_inverse_mfp_from_file('data/inverse_mfp/aug_11_inverse_mfp.dat')
 #plotfunc.plot_mfp_from_file('data/inverse_mfp/aug_11_inverse_mfp.dat')
 
@@ -127,7 +127,17 @@ analyze_fermicircle.save_array(f_emissions[0], f_list[0], emissivity, n_particle
 #for i in [0, 9, 19, 29, 39, 49]: 
 	#analyze_fermicircle.plot_circle_at_point(k_vectors[0], emission_points[0], 0, 64, 50, i)
 #analyze_fermicircle.fermi_circles_from_kvectors(original_center, k_vectors[0], emission_points[0], 0, 64, 50)
-analyze_fermicircle.plot_ratio_on_unshifted(k_vectors[0], emission_points[0], lower, upper, nbins, e_fermi)
-analyze_fermicircle.plot_absolute_on_unshifted(k_vectors[0], emission_points[0], lower, upper, nbins, e_fermi)
+'''
+k_vectors_04 = np.load('/data_mcgrpahenesim/k_vectors/2020-10-01_f0.03_e0.4_100000.txt')
+emissions_04 = np.load('/data_mcgrpahenesim/emissions/2020-10-01_f0.03_e0.4_100000.txt')
+k_vectors_003 = np.load('/data_mcgrpahenesim/k_vectors/2020-09-30_f0.03_e0.03_100000.txt')
+emissions_003 = np.load('/data_mcgrpahenesim/emissions/2020-09-30_f0.03_e0.03_100000.txt')
+
+middles_ratios_04 = analyze_fermicircle.convert_to_middles_ratios(k_vectors_04, emissions_04, lower, upper, nbins, e_fermi)
+middles_ratios_003 = analyze_fermicircle.convert_to_middles_ratios(k_vectors_003, emissions_003, lower, upper, nbins, e_fermi)
+
+data_arrays = [middles_ratios_04, middles_ratios_003]
+
+analyze_fermicircle.plot_ratio_on_unshifted(data_arrays)
 #plotfunc.histogram_plot_cart(emission_points, n_phonon, binwidth, source, drain, f_list, bound)
 #plotfunc.save_inverse_mfp_data(f_list, inverse_mfp, "aug_11_inverse_mfp")

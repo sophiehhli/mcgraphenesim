@@ -108,7 +108,7 @@ def plot_circle_at_point(k_vectors, emissions, lower, upper, nbins, show_nbin):
 	plt.ylabel(r'$k_y$')
 	plt.show()
 
-def plot_ratio_on_unshifted(k_vectors, emissions, lower, upper, nbins, efermi): 
+def convert_to_middles_ratios(k_vectors, emissions, lower, upper, nbins, efermi): 
 	x,y = construct_data_set(emissions, k_vectors, lower, upper)
 	bins, sorted_into_bins = binning(x, y, nbins, lower, upper)
 	ratios = []
@@ -123,11 +123,17 @@ def plot_ratio_on_unshifted(k_vectors, emissions, lower, upper, nbins, efermi):
 		ratio = unshifted/len(vector_set)
 		ratios.append(ratio)
 	middles = get_bin_middles(upper, lower, nbins, bins)
-	fig, ax = plt.subplots()
-	plt.scatter(middles, ratios, s = 1)
-	plt.xlabel("Length from emission")
-	plt.ylabel("Ratio of k-vectors on the centered fermi circle")
-	plt.show()
+	return [middles, ratios]
+
+def plot_ratio_on_unshifted(data_arrays)
+fig, ax = plt.subplots()
+for array in data_arrays: 
+	plt.scatter(array[0], array[1], s = 1)
+plt.xlabel("Length from emission")
+plt.ylabel("Ratio of k-vectors on the centered fermi circle")
+plt.legend(r"$f = 0.03, \epsilon = 0.4$", r"$f = 0.03, \epsilon = 0.4$")
+plt.show()
+
 
 def plot_absolute_on_unshifted(k_vectors, emissions, lower, upper, nbins, efermi): 
 	x,y = construct_horizontal_data_set(emissions, k_vectors, lower, upper)
