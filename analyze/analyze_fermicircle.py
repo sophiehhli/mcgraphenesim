@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import datetime 
 
+matplotlib.rcParams['font.sans-serif']='Arial'
+matplotlib.rcParams['font.family']='sans-serif'
+
 def convert_to_center(vector_set): 
 	x_mean = np.mean(np.array(vector_set)[:,0])
 	y_mean = np.mean(np.array(vector_set)[:,1])
@@ -20,6 +23,7 @@ def construct_data_set(emissions, deviations, lower, upper):
 	x_values = []
 	y_values = []
 	for i in range(len(emissions)): 
+		#print(emissions[i])
 		if emissions[i][0] > lower and emissions[i][0] < upper:
 			x_values.append(emissions[i][0]) 
 			y_values.append(deviations[i])
@@ -125,14 +129,24 @@ def convert_to_middles_ratios(k_vectors, emissions, lower, upper, nbins, efermi)
 	middles = get_bin_middles(upper, lower, nbins, bins)
 	return [middles, ratios]
 
-def plot_ratio_on_unshifted(data_arrays)
-fig, ax = plt.subplots()
-for array in data_arrays: 
-	plt.scatter(array[0], array[1], s = 1)
-plt.xlabel("Length from emission")
-plt.ylabel("Ratio of k-vectors on the centered fermi circle")
-plt.legend(r"$f = 0.03, \epsilon = 0.4$", r"$f = 0.03, \epsilon = 0.4$")
-plt.show()
+def plot_ratio_on_unshifted(data_arrays, param_array):
+	afont = {"fontname":"Arial"}
+	fig, ax = plt.subplots()
+	plots = []
+	for i in range(len(data_arrays)):
+		label = r"$f = $" + str(param_array[i][0]) + r"$, \epsilon = $" + str(param_array[i][1]) 
+		plot = plt.scatter(data_arrays[i][0], data_arrays[i][1], s = 1, label = label)
+		plots.append(plot)
+	plt.grid(linestyle='--')
+	plt.xlabel("Length from point of emission")#, afont)
+	plt.ylabel("Ratio of k-vectors on the centered fermi circle")#, afont)
+	'''for tick in ax.get_xticklabels():
+		tick.set_fontname("Arial")
+	for tick in ax.get_yticklabels():
+		tick.set_fontname("Arial")'''
+	ax.tick_params(direction="in", right=True)
+	plt.legend(handles = plots)#, afont)
+	plt.show()
 
 
 def plot_absolute_on_unshifted(k_vectors, emissions, lower, upper, nbins, efermi): 
