@@ -19,17 +19,17 @@ from progress.bar import IncrementalBar
 
 """choose boundary by creating instance from class""" 
 #bound = boundary.Circle(0,0,1,1,10)
-#bound = boundary.Rectangle(length = 150, width = 5)
-vertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(64,4),(64,2),(62,2),(62,0),(60,0),(60,2)]
-vertices.reverse()
-shortvertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(16,4),(16,2),(14,2),(14,0),(12,0),(12,2)]
-shortvertices.reverse()
-bound = boundary.Polygon(shortvertices)
+bound = boundary.Rectangle(length = 50, width = 10)
+#vertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(64,4),(64,2),(62,2),(62,0),(60,0),(60,2)]
+#vertices.reverse()
+#shortvertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(16,4),(16,2),(14,2),(14,0),(12,0),(12,2)]
+#shortvertices.reverse()
+#bound = boundary.Polygon(shortvertices)
 
 """parameters to be chosen for simualtion""" 
 f_list = [0.06] # f denotes probability of diffuse scattering 
 emissivity = 0.4
-n_particle = 10**5 # number of phonons to be released by the source
+n_particle = 10**2 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'electron'
 e_fermi = 10
@@ -39,16 +39,16 @@ d_kx = 1
 lower = 0
 upper = 16
 nbins = 100
-'''
+
 """create instance of the leads to include in the simulation""" 
 #therm_len = '0'
-source = contact.Source(bound.lead_coordinates('i+'))
-drain = contact.Drain(bound.lead_coordinates('i-'))
-v1 = contact.Thermometer(bound.lead_coordinates('v1'), emissivity)
-v2 = contact.Thermometer(bound.lead_coordinates('v2'), emissivity)
+source = contact.Source(bound.lead_coordinates('s'))
+drain = contact.Drain(bound.lead_coordinates('d'))
+#v1 = contact.Thermometer(bound.lead_coordinates(''), emissivity)
+#v2 = contact.Thermometer(bound.lead_coordinates(''), emissivity)
 #th1 = contact.Thermometer(bound.lead_coordinates(therm_len+'t1'))
 #th2 = contact.Thermometer(bound.lead_coordinates(therm_len+'t2'))
-contacts = [source, drain, v1, v2]#, th1, th2] #save in list for easier access
+contacts = [source, drain]#, v1, v2]#, th1, th2] #save in list for easier access
 
 sample = fermicircle.gen_sample(e_fermi, n_k_vec)
 centered_fermi_circle = fermicircle.Fermi_circle(sample, e_fermi, "Equilibrium")
@@ -127,7 +127,7 @@ analyze_fermicircle.save_array(emission_points[0], f_list[0], emissivity, n_part
 #for i in [0, 9, 19, 29, 39, 49]: 
 	#analyze_fermicircle.plot_circle_at_point(k_vectors[0], emission_points[0], 0, 64, 50, i)
 #analyze_fermicircle.fermi_circles_from_kvectors(original_center, k_vectors[0], emission_points[0], 0, 64, 50)
-'''
+
 k_vectors_04 = np.loadtxt('../data_mcgraphenesim/k_vectors/2020-10-02_f0.06__e0.4_100000.dat')
 emissions_04 = np.loadtxt('../data_mcgraphenesim/emissions/2020-10-02_f0.06__e0.4_100000.dat')
 k_vectors_003 = np.loadtxt('../data_mcgraphenesim/k_vectors/2020-10-02_f0.03__e0.4_100000.dat')
