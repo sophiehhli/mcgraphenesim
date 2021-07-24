@@ -19,7 +19,7 @@ from progress.bar import IncrementalBar
 
 """choose boundary by creating instance from class""" 
 #bound = boundary.Circle(0,0,1,1,10)
-bound = boundary.Rectangle(length = 50, width = 10)
+bound = boundary.Rectangle(length = 150, width = 10)
 #vertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(64,4),(64,2),(62,2),(62,0),(60,0),(60,2)]
 #vertices.reverse()
 #shortvertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(16,4),(16,2),(14,2),(14,0),(12,0),(12,2)]
@@ -27,9 +27,9 @@ bound = boundary.Rectangle(length = 50, width = 10)
 #bound = boundary.Polygon(shortvertices)
 
 """parameters to be chosen for simualtion""" 
-f_list = [0.06] # f denotes probability of diffuse scattering 
+f_list = [0.5] # f denotes probability of diffuse scattering 
 emissivity = 0.4
-n_particle = 10**2 # number of phonons to be released by the source
+n_particle = 10 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'electron'
 e_fermi = 10
@@ -44,8 +44,8 @@ nbins = 100
 #therm_len = '0'
 source = contact.Source(bound.lead_coordinates('s'))
 drain = contact.Drain(bound.lead_coordinates('d'))
-#v1 = contact.Thermometer(bound.lead_coordinates(''), emissivity)
-#v2 = contact.Thermometer(bound.lead_coordinates(''), emissivity)
+#v1 = contact.Thermometer(bound.lead_coordinates('v1'), emissivity)
+#v2 = contact.Thermometer(bound.lead_coordinates('v2'), emissivity)
 #th1 = contact.Thermometer(bound.lead_coordinates(therm_len+'t1'))
 #th2 = contact.Thermometer(bound.lead_coordinates(therm_len+'t2'))
 contacts = [source, drain]#, v1, v2]#, th1, th2] #save in list for easier access
@@ -57,7 +57,7 @@ unchanged_shifted_fermi_circle = fermicircle.Fermi_circle(centered_fermi_circle.
 
 original_center = centered_fermi_circle.center()
 
-visual.show_fermi_circles([centered_fermi_circle, shifted_fermi_circle])
+visual.show_fermi_circles([centered_fermi_circle])
 
 """lists that will be added to in the course of the simulation""" 
 emission_points = [] #array of interaction points at the boundary 
@@ -89,16 +89,16 @@ for f in range(len(f_list)):
 		while True:
 			"""loop through until phonon collides with source or drain"""
 			end = False
-			end = loops.polygon_loop(particle, f_list[f], bound, contacts)
+			end = loops.rectangle_loop(particle, f_list[f], bound, contacts)
 			f_k_vectors.append(particle.fermi_circle.sample[released])
 			visual.update_trajectory(particle, trajectory)
 			loops.update_f_arrays(f_emissions, f_centers, particle, shifted_fermi_circle)
 			if end: break
 		released += 1 # add to counter of number of phonons 
 		
-		#visual.show_boundary(bound, contacts)
-		#visual.show_trajectory(trajectory)
-		#plt.show()
+		visual.show_boundary(bound, contacts)
+		visual.show_trajectory(trajectory)
+		plt.show()
 		#visual.show_fermi_circles([centered_fermi_circle, shifted_fermi_circle])
 		#plt.show()
 		f_trajectories.append(trajectory)

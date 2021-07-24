@@ -235,7 +235,7 @@ class Polygon():
 		edge = 1
 		plt.xlim(self.x_min-edge, self.x_max+edge) 
 		plt.ylim(self.y_min-edge, self.y_max+edge)
-		plt.grid(linestyle='--')
+		#plt.grid(linestyle='--')
 		plt.xlabel("x")
 		plt.ylabel("y")
 
