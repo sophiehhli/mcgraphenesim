@@ -51,9 +51,10 @@ def initialize_f_arrays(f_emissions, f_centers, trajectory, particle, shifted_fe
 		f_centers.append(shifted_fermi_circle.center())
 	trajectory.append([False, particle.coords])
 
-def update_f_arrays(f_emissions, f_centers, particle, shifted_fermi_circle):
+def update_f_arrays(f_emissions, f_centers, particle, shifted_fermi_circle="0"):
 	f_emissions.append(particle.coords) #add the new phonon coordinates to the intersection points
-	f_centers.append(shifted_fermi_circle.center())
+	if shifted_fermi_circle != "0":
+		f_centers.append(shifted_fermi_circle.center())
 
 def update_arrays(trajectories, emission_points, centers, f_trajectories, f_emissions, f_centers):
 	trajectories.append(f_trajectories)
