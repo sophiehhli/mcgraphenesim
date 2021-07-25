@@ -19,7 +19,7 @@ from progress.bar import IncrementalBar
 
 """choose boundary by creating instance from class"""
 #bound = boundary.Circle(0,0,1,1,10)
-bound = boundary.Rectangle(length = 120, width = 1)
+bound = boundary.Rectangle(length = 120, width = 0.3)
 #vertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(64,4),(64,2),(62,2),(62,0),(60,0),(60,2)]
 #vertices.reverse()
 #shortvertices = [(0,2),(0,4),(2,4),(2,6),(4,6),(4,4),(16,4),(16,2),(14,2),(14,0),(12,0),(12,2)]
@@ -27,9 +27,9 @@ bound = boundary.Rectangle(length = 120, width = 1)
 #bound = boundary.Polygon(shortvertices)
 
 """parameters to be chosen for simualtion"""
-f_list = [0.5] # f denotes probability of diffuse scattering
+f_list = [0.9] # f denotes probability of diffuse scattering
 emissivity = 0.4
-n_particle = 10**3 # number of phonons to be released by the source
+n_particle = 10**4 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
 specie = 'phonon'
 #e_fermi = 10
@@ -128,7 +128,7 @@ for i in range(len(f_trajectories)):
         dx = f_trajectories[i][len(f_trajectories[i])-1][1][0] - f_trajectories[i][len(f_trajectories[i])-2][1][0]
         exit_angles.append(np.arctan(dy/dx))
         
-np.savetxt("angles.txt", exit_angles, fmt="%s")
+np.savetxt("angles.csv", exit_angles, delimiter=",")
 
 
 #analyze_fermicircle.save_array(k_vectors[0], f_list[0], emissivity, n_particle, 'k_vectors')
