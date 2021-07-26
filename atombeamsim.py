@@ -30,6 +30,10 @@ def get_vertices(tolerance, diameter, length, sheets):
 	vertices.extend(upper_vertices)
 	return vertices
 
+def get_vertices_angled(tolerance, diamter, length, sheets, angle):
+    sheet_width = length/sheets
+    error = np.random.normal(0, tolerance, size=sheets)
+    
 
 def get_exit_angle_array(trajectory_array, success_array):
     theta_array = []

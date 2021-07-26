@@ -5,7 +5,7 @@ import contact
 import time
 import loops
 import fermicircle
-import oven_sim
+import atombeamsim
 from analyze import *
 
 import numpy as np

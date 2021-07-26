@@ -1,4 +1,4 @@
-import oven_sim
+import atombeamsim
 from analyze import *
 
 import numpy as np
