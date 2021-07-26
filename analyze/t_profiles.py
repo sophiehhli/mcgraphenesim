@@ -71,28 +71,33 @@ def histogram_plot_polar(emission_points, n_phonon, binwidth, source, drain, f_l
 	plt.savefig("fig10remake_aug_10.png")
 	plt.show()
 
-def plot_theta_distribution(theta_array):
-	n, bins = np.histogram(theta_array, bins = "auto")
-	binwidth = bins[1] - bins [0]
+def plot_theta_distribution(theta_array_array, label_array):
 	theta = np.linspace(-np.pi/2, np.pi/2, 10000)
-	r = np.cos(np.abs(theta))*max(n)
+	# r = np.cos(np.abs(theta))*max(n)
 	fig, ax = plt.subplots()
 	# ax.plot(theta, r, label=r'$cos(\theta)$')
-	ax.scatter(bins[:-1]+binwidth/2, n/max(n), c="green", s=5)
+	for i in range(len(theta_array_array)):
+		n, bins = np.histogram(theta_array_array[i], bins = "auto")
+		binwidth = bins[1] - bins [0]
+		ax.scatter(bins[:-1]+binwidth/2, n/max(n), s=5, label = label_array[i])
 	ax.set_ylabel(r"$j(\theta)$")
 	ax.set_xlabel(r"$\theta$ (rad)")
+	ax.legend()
 	plt.show()
 
-def plot_theta_polar(theta_array):
+def plot_theta_polar(theta_array_array, label_array):
 	"""a polar plot of points, compared to cosine(theta)"""
-	n, bins = np.histogram(theta_array, bins = "auto")
-	binwidth = bins[1] - bins[0]
 	theta = np.linspace(-np.pi/2, np.pi/2, 10000)
 	r = np.cos(np.abs(theta))
 	fig = plt.figure()
 	ax = fig.add_subplot(111, projection='polar')
+	for i in range(len(theta_array_array)):
+		n, bins = np.histogram(theta_array_array[i], bins = "auto")
+		binwidth = bins[1] - bins[0]
+		ax.scatter(bins[:-1]+binwidth/2, n/max(n), s=5, label= label_array[i])
+
 	b = ax.plot(theta, r, label=r'$cos(\theta)$')
-	c = ax.scatter(bins[:-1]+binwidth/2, n/max(n), c='green', s=5, label='Distribution')
+	# c = ax.scatter(bins[:-1]+binwidth/2, n/max(n), c='green', s=5, label='Distribution')
 	ax.set_thetamin(-90)
 	ax.set_thetamax(90)
 	ax.set_theta_zero_location('N')

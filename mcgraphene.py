@@ -34,15 +34,15 @@ list(tup)
 sheets = 30
 length = 30
 diameter = 3
-tolerance = 0.1
+tolerance = 0
+angle = 90
 
-vertices = oven_sim.get_vertices(tolerance, diameter, length, sheets)
-
+vertices = atombeamsim.get_vertices_angled(tolerance, diameter, length, sheets, angle)
 bound = boundary.Polygon(vertices)
 
 # %% codecell
 """parameters to be chosen for simualtion"""
-f_list = [0.5] # f denotes probability of diffuse scattering
+f_list = [0.03] # f denotes probability of diffuse scattering
 emissivity = 0.4
 n_particle = 10000 # number of phonons to be released by the source
 binwidth = 0.1 # binning for any histograms to be created
@@ -87,8 +87,8 @@ centers = []
 success_array = []
 #k_vectors = []
 
-#visual.show_boundary(bound, contacts)
-#plt.show()
+visual.show_boundary(bound, contacts)
+plt.show()
 # start timer for loop
 tic = time.perf_counter()
 print("timer started at: "+ str(datetime.datetime.now()))
@@ -158,9 +158,9 @@ print(f"Executed loop in {toc - tic:0.4f} seconds")
 	#analyze_fermicircle.plot_circle_at_point(k_vectors[0], emission_points[0], 0, 64, 50, i)
 #analyze_fermicircle.fermi_circles_from_kvectors(original_center, k_vectors[0], emission_points[0], 0, 64, 50)
 
-angle_array = oven_sim.get_exit_angle_array(trajectories, success_array)
+angle_array = atombeamsim.get_exit_angle_array(trajectories, success_array)
 
-with open('angle_array.npy', 'wb') as f:
+with open('angle_array_smooth.npy', 'wb') as f:
 	np.save(f, angle_array)
 # t_profiles.plot_theta_polar(angle_array)
 #k_vectors_04 = np.loadtxt('../data_mcgraphenesim/k_vectors/2020-10-02_f0.06__e0.4_100000.dat')
